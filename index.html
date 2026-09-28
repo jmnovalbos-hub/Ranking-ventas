@@ -1,4 +1,4 @@
-<!-- DASHBOARD RANKING ASESORES POR MARCA - MOODLE READY -->
+<!-- DASHBOARD RANKING ASESORES REPARTO JOSEMI - MOODLE READY -->
 <div id="moodle-ranking-dashboard" style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); max-width: 1200px; margin: 0 auto;">
   
   <!-- Carga CDN Chart.js para gráficos -->
@@ -7,11 +7,11 @@
   <!-- Encabezado -->
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0;">
     <div>
-      <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #0f172a;">📊 Ranking Comercial de Asesores por Trademarks</h2>
-      <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">Rendimiento comercial con desglose multimarca</p>
+      <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #0f172a;">📊 Ranking Comercial de Asesores</h2>
+      <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">Rendimiento comercial con desglose por Cupón Normal y Beca/Rebeca</p>
     </div>
     <div style="font-size: 12px; background-color: #e0f2fe; color: #0369a1; padding: 6px 12px; border-radius: 20px; font-weight: 600;">
-      Actualizado: 25/09/2026 (16:45)
+      Actualizado: Reparto Domingo (Septiembre 2026)
     </div>
   </div>
 
@@ -19,19 +19,19 @@
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
     <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6;">
       <span style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Facturación Total</span>
-      <div id="kpi-facturacion" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">1.663.064,55 €</div>
+      <div id="kpi-facturacion" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">1.444.603,43 €</div>
     </div>
     <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #10b981;">
       <span style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Total Matrículas</span>
-      <div id="kpi-ventas" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">604</div>
+      <div id="kpi-ventas" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">640</div>
     </div>
     <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #f59e0b;">
       <span style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Asesores Visibles</span>
-      <div id="kpi-asesores" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">82</div>
+      <div id="kpi-asesores" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">84</div>
     </div>
     <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #8b5cf6;">
       <span style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Ticket Medio / Venta</span>
-      <div id="kpi-ticket" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">2.753,42 €</div>
+      <div id="kpi-ticket" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">2.257,19 €</div>
     </div>
   </div>
 
@@ -111,90 +111,92 @@
 </div>
 
 <script>
-// Dataset extraído del Excel con desglose por Trademark
+// Dataset extraído de 'ranking domingo.xlsx'
 const rawDataWithBrands = [
-  {"Asesor": "Manuel Jesus Aguilar Luque", "Importe": 79023.4, "Registros": 24, "Marcas": [{"Marca": "Campus", "Importe": 17820.0, "Registros": 8}, {"Marca": "CEAC FP Oficial", "Importe": 61203.4, "Registros": 16}]},
-  {"Asesor": "Jayone Garijo Ruiz", "Importe": 81634.73, "Registros": 22, "Marcas": [{"Marca": "Campus", "Importe": 6670.0, "Registros": 3}, {"Marca": "CEAC FP Oficial", "Importe": 74964.73, "Registros": 19}]},
-  {"Asesor": "Isabel Abalo de Dios", "Importe": 76478.14, "Registros": 22, "Marcas": [{"Marca": "Campus", "Importe": 2190.0, "Registros": 1}, {"Marca": "CEAC FP Oficial", "Importe": 74288.14, "Registros": 21}]},
-  {"Asesor": "Gloria Maria Compaire Izuel", "Importe": 59575.81, "Registros": 19, "Marcas": [{"Marca": "35mm", "Importe": 2190.0, "Registros": 1}, {"Marca": "Campus", "Importe": 8760.0, "Registros": 4}, {"Marca": "CEAC FP Oficial", "Importe": 48625.81, "Registros": 14}]},
-  {"Asesor": "Rocio Gerpe Barreiros", "Importe": 36920.0, "Registros": 18, "Marcas": [{"Marca": "Flou", "Importe": 36920.0, "Registros": 18}]},
-  {"Asesor": "Oscar Vilar Lombardero", "Importe": 37624.0, "Registros": 17, "Marcas": [{"Marca": "Nubika", "Importe": 37624.0, "Registros": 17}]},
-  {"Asesor": "Beatriz Queiruga Penedo", "Importe": 36540.0, "Registros": 16, "Marcas": [{"Marca": "Nubika", "Importe": 36540.0, "Registros": 16}]},
-  {"Asesor": "Alvaro Tineo Meza", "Importe": 36045.0, "Registros": 15, "Marcas": [{"Marca": "35mm", "Importe": 36045.0, "Registros": 15}]},
-  {"Asesor": "Maria Cruz Baltodano Chavarria", "Importe": 30604.0, "Registros": 14, "Marcas": [{"Marca": "Nubika", "Importe": 30604.0, "Registros": 14}]},
-  {"Asesor": "Lilian Llanos Llanos", "Importe": 63360.07, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 63360.07, "Registros": 14}]},
-  {"Asesor": "Ana Blanco Gonzalez", "Importe": 30346.0, "Registros": 14, "Marcas": [{"Marca": "Campus", "Importe": 30346.0, "Registros": 14}]},
-  {"Asesor": "Leticia Maria Arguelles Blanco", "Importe": 44722.47, "Registros": 13, "Marcas": [{"Marca": "Campus", "Importe": 8960.0, "Registros": 4}, {"Marca": "CEAC FP Oficial", "Importe": 35762.47, "Registros": 9}]},
-  {"Asesor": "Ana Yolanda Otero Revenga", "Importe": 26918.0, "Registros": 13, "Marcas": [{"Marca": "Campus", "Importe": 26918.0, "Registros": 13}]},
-  {"Asesor": "Jose Vicente Martinez", "Importe": 25380.0, "Registros": 12, "Marcas": [{"Marca": "Flou", "Importe": 25380.0, "Registros": 12}]},
-  {"Asesor": "Gabriel Antonio Donis Tato", "Importe": 30730.0, "Registros": 12, "Marcas": [{"Marca": "Unisport", "Importe": 30730.0, "Registros": 12}]},
-  {"Asesor": "Fatima Fernandez Martinez", "Importe": 44680.0, "Registros": 12, "Marcas": [{"Marca": "CEMP", "Importe": 44680.0, "Registros": 12}]},
   {"Asesor": "Beatriz Fernandez-España Barral", "Importe": 26380.0, "Registros": 12, "Marcas": [{"Marca": "Flou", "Importe": 26380.0, "Registros": 12}]},
-  {"Asesor": "Maria Begoña Diaz Melendez", "Importe": 39624.0, "Registros": 11, "Marcas": [{"Marca": "CEMP", "Importe": 39624.0, "Registros": 11}]},
-  {"Asesor": "Esperanza Ruiz San Martin", "Importe": 27860.0, "Registros": 11, "Marcas": [{"Marca": "35mm", "Importe": 27860.0, "Registros": 11}]},
-  {"Asesor": "Nuria Mariño Alonso", "Importe": 21500.0, "Registros": 10, "Marcas": [{"Marca": "Flou", "Importe": 21500.0, "Registros": 10}]},
-  {"Asesor": "Sofia Ines Garcia Saavedra", "Importe": 19182.0, "Registros": 9, "Marcas": [{"Marca": "Campus", "Importe": 19182.0, "Registros": 9}]},
-  {"Asesor": "Natalia Almudena Graña Suarez", "Importe": 30678.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 30678.0, "Registros": 9}]},
-  {"Asesor": "Jose Pablo Otero Acevedo", "Importe": 23252.0, "Registros": 9, "Marcas": [{"Marca": "Tokio", "Importe": 23252.0, "Registros": 9}]},
-  {"Asesor": "Javier Deus Garcia", "Importe": 19210.0, "Registros": 9, "Marcas": [{"Marca": "Flou", "Importe": 19210.0, "Registros": 9}]},
-  {"Asesor": "Jacob Martinez Gonzalez", "Importe": 33610.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 33610.0, "Registros": 9}]},
-  {"Asesor": "Carlos Matias Dos Santos Mora", "Importe": 25060.0, "Registros": 9, "Marcas": [{"Marca": "Unisport", "Importe": 25060.0, "Registros": 9}]},
-  {"Asesor": "Brais Prieto Mexigos", "Importe": 21060.0, "Registros": 9, "Marcas": [{"Marca": "Unisport", "Importe": 21060.0, "Registros": 9}]},
-  {"Asesor": "Santiago Concheiro Alvarez", "Importe": 21170.0, "Registros": 8, "Marcas": [{"Marca": "35mm", "Importe": 21170.0, "Registros": 8}]},
-  {"Asesor": "Maria Luz Vidal Cardalda", "Importe": 16044.0, "Registros": 8, "Marcas": [{"Marca": "Flou", "Importe": 16044.0, "Registros": 8}]},
-  {"Asesor": "Lourdes Quintela Fraga", "Importe": 30620.0, "Registros": 8, "Marcas": [{"Marca": "CEMP", "Importe": 30620.0, "Registros": 8}]},
-  {"Asesor": "Laura Varela Allo", "Importe": 18340.0, "Registros": 8, "Marcas": [{"Marca": "35mm", "Importe": 18340.0, "Registros": 8}]},
-  {"Asesor": "Carmen Vazquez Ferro", "Importe": 19020.0, "Registros": 8, "Marcas": [{"Marca": "CEMP", "Importe": 19020.0, "Registros": 8}]},
-  {"Asesor": "Ana Maria Fuentes Fuentes", "Importe": 17595.27, "Registros": 8, "Marcas": [{"Marca": "Campus", "Importe": 15030.0, "Registros": 7}, {"Marca": "CEAC FP Oficial", "Importe": 2565.27, "Registros": 1}]},
-  {"Asesor": "Victor Guerra Vazquez", "Importe": 20080.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 20080.0, "Registros": 7}]},
-  {"Asesor": "Vanessa Andreina De Angelis", "Importe": 17832.0, "Registros": 7, "Marcas": [{"Marca": "Tokio", "Importe": 17832.0, "Registros": 7}]},
-  {"Asesor": "Miguel Angel Villarroel Valenzuela", "Importe": 18232.0, "Registros": 7, "Marcas": [{"Marca": "Tokio", "Importe": 18232.0, "Registros": 7}]},
-  {"Asesor": "Margarita Garcia Iglesias", "Importe": 14260.0, "Registros": 7, "Marcas": [{"Marca": "Campus", "Importe": 14260.0, "Registros": 7}]},
-  {"Asesor": "Gerardo Manuel Roca Felpeto", "Importe": 18009.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 18009.0, "Registros": 7}]},
-  {"Asesor": "Rafael Mella Ferreiro", "Importe": 19040.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 19040.0, "Registros": 6}]},
-  {"Asesor": "Monica Orjales Ormaechea", "Importe": 16838.0, "Registros": 6, "Marcas": [{"Marca": "CEMP", "Importe": 16838.0, "Registros": 6}]},
-  {"Asesor": "Maria Lourdes Manzano Fernandez", "Importe": 21636.53, "Registros": 6, "Marcas": [{"Marca": "Campus", "Importe": 1946.0, "Registros": 1}, {"Marca": "CEAC FP Oficial", "Importe": 19690.53, "Registros": 5}]},
-  {"Asesor": "Maria Lourdes Alonso Nuñez", "Importe": 13040.0, "Registros": 6, "Marcas": [{"Marca": "Campus", "Importe": 13040.0, "Registros": 6}]},
-  {"Asesor": "Maria Lopez Regueira", "Importe": 20270.0, "Registros": 6, "Marcas": [{"Marca": "CEMP", "Importe": 20270.0, "Registros": 6}]},
-  {"Asesor": "Marcos Casal Bellon", "Importe": 16440.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 16440.0, "Registros": 6}]},
-  {"Asesor": "Lucia Perez Rodriguez", "Importe": 18236.87, "Registros": 6, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 1}, {"Marca": "CEAC FP Oficial", "Importe": 16146.87, "Registros": 5}]},
+  {"Asesor": "Javier Deus Garcia", "Importe": 19210.0, "Registros": 6, "Marcas": [{"Marca": "Flou", "Importe": 19210.0, "Registros": 6}]},
+  {"Asesor": "Jose Vicente Martínez", "Importe": 31550.0, "Registros": 15, "Marcas": [{"Marca": "Flou", "Importe": 31550.0, "Registros": 15}]},
+  {"Asesor": "María Luz Vidal Cardalda", "Importe": 16044.0, "Registros": 10, "Marcas": [{"Marca": "Flou", "Importe": 16044.0, "Registros": 10}]},
+  {"Asesor": "Nuria Mariño Alonso", "Importe": 23590.0, "Registros": 9, "Marcas": [{"Marca": "Flou", "Importe": 23590.0, "Registros": 9}]},
+  {"Asesor": "Rocio Gerpe Barreiros", "Importe": 36920.0, "Registros": 18, "Marcas": [{"Marca": "Flou", "Importe": 36920.0, "Registros": 18}]},
+  {"Asesor": "Helen Rachell Aviles Bárcenas", "Importe": 7760.0, "Registros": 3, "Marcas": [{"Marca": "Flou", "Importe": 7760.0, "Registros": 3}]},
+  {"Asesor": "Maria Alejandra Fernandez Gonzalez", "Importe": 1776.0, "Registros": 2, "Marcas": [{"Marca": "Flou", "Importe": 1776.0, "Registros": 2}]},
+  {"Asesor": "Alvaro Tineo Meza", "Importe": 35985.0, "Registros": 15, "Marcas": [{"Marca": "35mm", "Importe": 35985.0, "Registros": 15}]},
+  {"Asesor": "Ana Cristina Sousa Díaz", "Importe": 16450.0, "Registros": 5, "Marcas": [{"Marca": "35mm", "Importe": 16450.0, "Registros": 5}]},
+  {"Asesor": "Laura Varela Allo", "Importe": 19100.0, "Registros": 9, "Marcas": [{"Marca": "35mm", "Importe": 19100.0, "Registros": 9}]},
+  {"Asesor": "Rocio Perez Lopez", "Importe": 0.0, "Registros": 0, "Marcas": [{"Marca": "35mm", "Importe": 0.0, "Registros": 0}]},
+  {"Asesor": "Santiago Concheiro Álvarez", "Importe": 12578.0, "Registros": 4, "Marcas": [{"Marca": "35mm", "Importe": 12578.0, "Registros": 4}]},
+  {"Asesor": "Esperanza Ruiz San Martín", "Importe": 30050.0, "Registros": 12, "Marcas": [{"Marca": "35mm", "Importe": 30050.0, "Registros": 12}]},
+  {"Asesor": "Irene Blanco Rodriguez", "Importe": 1862.0, "Registros": 2, "Marcas": [{"Marca": "35mm", "Importe": 1862.0, "Registros": 2}]},
+  {"Asesor": "Valeria Ledo Gonzalo", "Importe": 8632.0, "Registros": 5, "Marcas": [{"Marca": "35mm", "Importe": 8632.0, "Registros": 5}]},
   {"Asesor": "Estefania Iglesias Delgado", "Importe": 14190.0, "Registros": 6, "Marcas": [{"Marca": "Nubika", "Importe": 14190.0, "Registros": 6}]},
-  {"Asesor": "Diego Felipe De Araujo", "Importe": 17375.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 17375.0, "Registros": 6}]},
-  {"Asesor": "Alejandro Garcia Delgado", "Importe": 12740.0, "Registros": 6, "Marcas": [{"Marca": "Campus", "Importe": 12740.0, "Registros": 6}]},
-  {"Asesor": "Yanet Gabriela Garcia Vielma", "Importe": 11600.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 11600.0, "Registros": 5}]},
-  {"Asesor": "Luis Enrique Perez Cordova", "Importe": 13420.0, "Registros": 5, "Marcas": [{"Marca": "Tokio", "Importe": 13420.0, "Registros": 5}]},
-  {"Asesor": "Lucia Ugarte Brandariz", "Importe": 13054.0, "Registros": 5, "Marcas": [{"Marca": "Tokio", "Importe": 13054.0, "Registros": 5}]},
-  {"Asesor": "Laura Costoya Santos", "Importe": 13200.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 13200.0, "Registros": 5}]},
-  {"Asesor": "Ana Cristina Souza Diaz", "Importe": 16450.0, "Registros": 5, "Marcas": [{"Marca": "35mm", "Importe": 16450.0, "Registros": 5}]},
-  {"Asesor": "Yolanda Gonzalez Rodriguez", "Importe": 10810.0, "Registros": 4, "Marcas": [{"Marca": "Unisport", "Importe": 10810.0, "Registros": 4}]},
-  {"Asesor": "Valeria Ledo Gonzalo", "Importe": 8632.0, "Registros": 4, "Marcas": [{"Marca": "35mm", "Importe": 8632.0, "Registros": 4}]},
-  {"Asesor": "Sandra Alvarez Lourido", "Importe": 12327.5, "Registros": 4, "Marcas": [{"Marca": "Mint", "Importe": 12327.5, "Registros": 4}]},
-  {"Asesor": "Maria Jesus Prado Mosquera", "Importe": 15060.0, "Registros": 4, "Marcas": [{"Marca": "CEMP", "Importe": 15060.0, "Registros": 4}]},
-  {"Asesor": "Jose Manuel Doldan Miras", "Importe": 12060.0, "Registros": 4, "Marcas": [{"Marca": "Unisport", "Importe": 12060.0, "Registros": 4}]},
-  {"Asesor": "Ivan Dopico Rodriguez", "Importe": 10282.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10282.0, "Registros": 4}]},
-  {"Asesor": "Ileana Waisman Martinez", "Importe": 8760.0, "Registros": 4, "Marcas": [{"Marca": "Nubika", "Importe": 8760.0, "Registros": 4}]},
-  {"Asesor": "Helen Rachell Aviles Barcenas", "Importe": 7760.0, "Registros": 4, "Marcas": [{"Marca": "Flou", "Importe": 7760.0, "Registros": 4}]},
-  {"Asesor": "Sandra Marti Cano", "Importe": 12181.5, "Registros": 3, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 12181.5, "Registros": 3}]},
-  {"Asesor": "David Dopico Rodriguez", "Importe": 6970.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 6970.0, "Registros": 3}]},
-  {"Asesor": "Antonio Javier Eijo Cal", "Importe": 7172.0, "Registros": 3, "Marcas": [{"Marca": "Tokio", "Importe": 7172.0, "Registros": 3}]},
-  {"Asesor": "Andrea Fernandez España colon", "Importe": 7520.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 7520.0, "Registros": 3}]},
-  {"Asesor": "Victor Andres Ordoñez Masache", "Importe": 3176.67, "Registros": 2, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 3176.67, "Registros": 2}]},
-  {"Asesor": "Tatiana Andres Docal", "Importe": 4066.0, "Registros": 2, "Marcas": [{"Marca": "Campus", "Importe": 4066.0, "Registros": 2}]},
-  {"Asesor": "Robin Mario De Miranda Miranda", "Importe": 5680.0, "Registros": 2, "Marcas": [{"Marca": "Tokio", "Importe": 2690.0, "Registros": 1}, {"Marca": "Unisport", "Importe": 2990.0, "Registros": 1}]},
-  {"Asesor": "Noelia Ares Patiño", "Importe": 7780.0, "Registros": 2, "Marcas": [{"Marca": "CEMP", "Importe": 7780.0, "Registros": 2}]},
-  {"Asesor": "Maria Virginia Graterol Valera", "Importe": 5730.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 5730.0, "Registros": 2}]},
-  {"Asesor": "Marcelo Garcia Cruz", "Importe": 5780.0, "Registros": 2, "Marcas": [{"Marca": "Tokio", "Importe": 5780.0, "Registros": 2}]},
+  {"Asesor": "Ileana Waisman Martinez", "Importe": 10632.0, "Registros": 6, "Marcas": [{"Marca": "Nubika", "Importe": 10632.0, "Registros": 6}]},
+  {"Asesor": "Maria Cruz Baltodano Chavarria", "Importe": 30604.0, "Registros": 16, "Marcas": [{"Marca": "Nubika", "Importe": 30604.0, "Registros": 16}]},
+  {"Asesor": "Oscar Vilar Lombardero", "Importe": 35346.0, "Registros": 18, "Marcas": [{"Marca": "Nubika", "Importe": 35346.0, "Registros": 18}]},
+  {"Asesor": "Beatriz Queiruga Penedo", "Importe": 38780.0, "Registros": 17, "Marcas": [{"Marca": "Nubika", "Importe": 38780.0, "Registros": 17}]},
+  {"Asesor": "Gloria María Compaire Izuel", "Importe": 22892.55, "Registros": 15, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 22892.55, "Registros": 15}]},
+  {"Asesor": "Jayone Garijo Ruiz", "Importe": 46597.5, "Registros": 25, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 39927.5, "Registros": 22}, {"Marca": "Campus", "Importe": 6670.0, "Registros": 3}]},
+  {"Asesor": "Leticia María Argüelles Blanco", "Importe": 28651.97, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 19691.97, "Registros": 10}, {"Marca": "Campus", "Importe": 8960.0, "Registros": 4}]},
+  {"Asesor": "Lillian LLanos LLanos", "Importe": 31679.74, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 31679.74, "Registros": 14}]},
+  {"Asesor": "Lucia Perez Rodriguez", "Importe": 11192.26, "Registros": 7, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 11192.26, "Registros": 7}]},
+  {"Asesor": "Manuel Jesus Aguilar Luque", "Importe": 28460.91, "Registros": 16, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 28460.91, "Registros": 16}]},
+  {"Asesor": "Maria Lourdes Manzano Fernandez", "Importe": 9376.5, "Registros": 7, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 9376.5, "Registros": 7}]},
+  {"Asesor": "Isabel Abalo de Dios", "Importe": 39332.52, "Registros": 22, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 37142.52, "Registros": 21}, {"Marca": "Campus", "Importe": 2190.0, "Registros": 1}]},
+  {"Asesor": "Ana Blanco González", "Importe": 28256.0, "Registros": 14, "Marcas": [{"Marca": "Campus", "Importe": 28256.0, "Registros": 14}]},
+  {"Asesor": "Ana María Fuentes Fuentes", "Importe": 13040.0, "Registros": 7, "Marcas": [{"Marca": "Campus", "Importe": 13040.0, "Registros": 7}]},
+  {"Asesor": "Ana Yolanda Otero Revenga", "Importe": 22338.0, "Registros": 13, "Marcas": [{"Marca": "Campus", "Importe": 22338.0, "Registros": 13}]},
   {"Asesor": "Lorena Angeriz Lopez", "Importe": 4180.0, "Registros": 2, "Marcas": [{"Marca": "Campus", "Importe": 4180.0, "Registros": 2}]},
-  {"Asesor": "Jaime Paz Fernandez", "Importe": 5180.0, "Registros": 2, "Marcas": [{"Marca": "Tokio", "Importe": 5180.0, "Registros": 2}]},
-  {"Asesor": "Irene Blanco Rodriguez", "Importe": 4312.0, "Registros": 2, "Marcas": [{"Marca": "35mm", "Importe": 4312.0, "Registros": 2}]},
-  {"Asesor": "Gema Fernandez Nogueira", "Importe": 5130.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 5130.0, "Registros": 2}]},
-  {"Asesor": "Carlos Miguez Gracia", "Importe": 4052.0, "Registros": 2, "Marcas": [{"Marca": "35mm", "Importe": 2190.0, "Registros": 1}, {"Marca": "Campus", "Importe": 1862.0, "Registros": 1}]},
-  {"Asesor": "Rocio Ponte Gonzalez", "Importe": 2090.0, "Registros": 1, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 1}]},
-  {"Asesor": "Maria Alejandra Fernandez Gonzalez", "Importe": 1776.0, "Registros": 1, "Marcas": [{"Marca": "Flou", "Importe": 1776.0, "Registros": 1}]},
+  {"Asesor": "Margarita Garcia Iglesias", "Importe": 18324.0, "Registros": 12, "Marcas": [{"Marca": "Campus", "Importe": 18324.0, "Registros": 12}]},
+  {"Asesor": "Maria Lourdes Alonso Nuñez", "Importe": 17320.0, "Registros": 8, "Marcas": [{"Marca": "Campus", "Importe": 17320.0, "Registros": 8}]},
+  {"Asesor": "Sofia Ines Garcia Saavedra", "Importe": 2090.0, "Registros": 10, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 10}]},
+  {"Asesor": "Tatiana Andres Docal", "Importe": 21172.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 21172.0, "Registros": 3}]},
+  {"Asesor": "Alejandro Garcia Delgado", "Importe": 2290.0, "Registros": 6, "Marcas": [{"Marca": "Campus", "Importe": 2290.0, "Registros": 6}]},
+  {"Asesor": "Carlos Miguez Gracia", "Importe": 22384.0, "Registros": 8, "Marcas": [{"Marca": "Campus", "Importe": 16970.0, "Registros": 3}, {"Marca": "Campus", "Importe": 5414.0, "Registros": 5}]},
+  {"Asesor": "Gloria Maria Compaire Izuel", "Importe": 6470.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 6470.0, "Registros": 3}]},
+  {"Asesor": "Lucía Pérez Rodríguez", "Importe": 2090.0, "Registros": 1, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 1}]},
+  {"Asesor": "Manuel Jesús Aguilar Luque", "Importe": 13240.0, "Registros": 6, "Marcas": [{"Marca": "Campus", "Importe": 13240.0, "Registros": 6}]},
+  {"Asesor": "Maria Lourdes Manzano Fernández", "Importe": 1946.0, "Registros": 2, "Marcas": [{"Marca": "Campus", "Importe": 1946.0, "Registros": 2}]},
+  {"Asesor": "María Alonso Nuñez", "Importe": 0.0, "Registros": 0, "Marcas": [{"Marca": "Mint", "Importe": 0.0, "Registros": 0}]},
+  {"Asesor": "Sandra Alvarez Lourido", "Importe": 9887.0, "Registros": 3, "Marcas": [{"Marca": "Mint", "Importe": 9887.0, "Registros": 3}]},
+  {"Asesor": "Fátima Fernández Martínez", "Importe": 41090.0, "Registros": 12, "Marcas": [{"Marca": "CEMP", "Importe": 41090.0, "Registros": 12}]},
+  {"Asesor": "Jacob Martinez Gonzalez", "Importe": 25730.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 25730.0, "Registros": 9}]},
+  {"Asesor": "Lourdes Quintela Fraga", "Importe": 26930.0, "Registros": 8, "Marcas": [{"Marca": "CEMP", "Importe": 26930.0, "Registros": 8}]},
+  {"Asesor": "Maria Begoña Diaz Melendez", "Importe": 39924.0, "Registros": 12, "Marcas": [{"Marca": "CEMP", "Importe": 39924.0, "Registros": 12}]},
+  {"Asesor": "Maria Jesus Prado Mosquera", "Importe": 15060.0, "Registros": 4, "Marcas": [{"Marca": "CEMP", "Importe": 15060.0, "Registros": 4}]},
+  {"Asesor": "Natalia Almudena Graña Suarez", "Importe": 21174.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 21174.0, "Registros": 9}]},
+  {"Asesor": "Noelia Ares Patiño", "Importe": 5562.48, "Registros": 2, "Marcas": [{"Marca": "CEMP", "Importe": 5562.48, "Registros": 2}]},
+  {"Asesor": "Carmen Vazquez Ferro", "Importe": 21044.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 21044.0, "Registros": 9}]},
   {"Asesor": "Lorena Lago Piñeiro", "Importe": 3890.0, "Registros": 1, "Marcas": [{"Marca": "CEMP", "Importe": 3890.0, "Registros": 1}]},
-  {"Asesor": "Lorena Daranae Zuloaga Sanchez", "Importe": 1790.0, "Registros": 1, "Marcas": [{"Marca": "Unisport", "Importe": 1790.0, "Registros": 1}]},
-  {"Asesor": "Itzel Rodriguez Hernandez", "Importe": 850.47, "Registros": 1, "Marcas": [{"Marca": "CEMP", "Importe": 850.47, "Registros": 1}]},
-  {"Asesor": "Begoña Chacon Olmos", "Importe": 1336.12, "Registros": 1, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 1336.12, "Registros": 1}]}
+  {"Asesor": "Maria Lopez Regueira", "Importe": 20270.0, "Registros": 6, "Marcas": [{"Marca": "CEMP", "Importe": 20270.0, "Registros": 6}]},
+  {"Asesor": "Mónica Orjales Ormaechea", "Importe": 12948.0, "Registros": 7, "Marcas": [{"Marca": "CEMP", "Importe": 12948.0, "Registros": 7}]},
+  {"Asesor": "Antonio Javier Eijo Cal", "Importe": 7172.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 7172.0, "Registros": 4}]},
+  {"Asesor": "Diego Felipe De Araujo", "Importe": 17475.0, "Registros": 7, "Marcas": [{"Marca": "Tokio", "Importe": 17475.0, "Registros": 7}]},
+  {"Asesor": "Ivan Dopico Rodriguez", "Importe": 10282.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10282.0, "Registros": 4}]},
+  {"Asesor": "Lucía Ugarte Brandariz", "Importe": 13054.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 13054.0, "Registros": 6}]},
+  {"Asesor": "Miguel Ángel Villarroel Valenzuela", "Importe": 15542.0, "Registros": 8, "Marcas": [{"Marca": "Tokio", "Importe": 15542.0, "Registros": 8}]},
+  {"Asesor": "Robin Mario De Miranda De Miranda", "Importe": 2690.0, "Registros": 1, "Marcas": [{"Marca": "Tokio", "Importe": 2690.0, "Registros": 1}]},
+  {"Asesor": "Vanessa Andreina De Angelis", "Importe": 18030.0, "Registros": 7, "Marcas": [{"Marca": "Tokio", "Importe": 18030.0, "Registros": 7}]},
+  {"Asesor": "Jaime Paz Fernandez", "Importe": 10660.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10660.0, "Registros": 4}]},
+  {"Asesor": "Jose Pablo Otero Acevedo", "Importe": 26002.0, "Registros": 11, "Marcas": [{"Marca": "Tokio", "Importe": 26002.0, "Registros": 11}]},
+  {"Asesor": "Luis Enrique Perez Cordova", "Importe": 16310.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 16310.0, "Registros": 6}]},
+  {"Asesor": "Marcelo García Cruz", "Importe": 8470.0, "Registros": 3, "Marcas": [{"Marca": "Tokio", "Importe": 8470.0, "Registros": 3}]},
+  {"Asesor": "Andrea Fernández España Colón", "Importe": 7520.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 7520.0, "Registros": 3}]},
+  {"Asesor": "Brais Prieto Mexigos", "Importe": 18920.0, "Registros": 8, "Marcas": [{"Marca": "Unisport", "Importe": 18920.0, "Registros": 8}]},
+  {"Asesor": "Carlos Matías Dos Santos Mora", "Importe": 30040.0, "Registros": 11, "Marcas": [{"Marca": "Unisport", "Importe": 30040.0, "Registros": 11}]},
+  {"Asesor": "David Dopico", "Importe": 6970.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 6970.0, "Registros": 3}]},
+  {"Asesor": "Gabriel Antonio Donis Tato", "Importe": 41790.0, "Registros": 15, "Marcas": [{"Marca": "Unisport", "Importe": 41790.0, "Registros": 15}]},
+  {"Asesor": "Gemma Fernández Nogueira", "Importe": 8720.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 8720.0, "Registros": 3}]},
+  {"Asesor": "Gerardo Manuel Roca Felpeto", "Importe": 18004.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 18004.0, "Registros": 7}]},
+  {"Asesor": "José Manuel Doldán Miras", "Importe": 12060.0, "Registros": 4, "Marcas": [{"Marca": "Unisport", "Importe": 12060.0, "Registros": 4}]},
+  {"Asesor": "Laura Costoya", "Importe": 15240.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 15240.0, "Registros": 6}]},
+  {"Asesor": "Lorena Daranae Zuloaga Sanchez", "Importe": 4780.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 4780.0, "Registros": 2}]},
+  {"Asesor": "Marcos Casal Bellón", "Importe": 14540.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 14540.0, "Registros": 6}]},
+  {"Asesor": "Maria Virginia Graterol Valera", "Importe": 5830.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 5830.0, "Registros": 2}]},
+  {"Asesor": "Rafael Mella Ferreiro", "Importe": 18040.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 18040.0, "Registros": 6}]},
+  {"Asesor": "Robin Mario De Miranda Miranda", "Importe": -200.0, "Registros": 0, "Marcas": [{"Marca": "Unisport", "Importe": -200.0, "Registros": 0}]},
+  {"Asesor": "Victor Guerra Vazquez", "Importe": 20080.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 20080.0, "Registros": 7}]},
+  {"Asesor": "Yanet Gabriela Garcia Vielma", "Importe": 11600.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 11600.0, "Registros": 5}]},
+  {"Asesor": "Yolanda González Rodríguez", "Importe": 10710.0, "Registros": 4, "Marcas": [{"Marca": "Unisport", "Importe": 10710.0, "Registros": 4}]}
 ];
 
 let currentTopFilter = 0; // 0 = Todos
