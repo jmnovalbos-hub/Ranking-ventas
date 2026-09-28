@@ -1,416 +1,131 @@
-<!-- DASHBOARD RANKING ASESORES REPARTO JOSEMI - MOODLE READY -->
-<div id="moodle-ranking-dashboard" style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); max-width: 1200px; margin: 0 auto;">
+<!-- Librería Chart.js para gráficos de alto rendimiento -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div style="background: linear-gradient(145deg, #0f172a, #1e293b); padding: 28px; border-radius: 20px; max-width: 950px; margin: 20px auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 1px solid #334155;">
   
-  <!-- Carga CDN Chart.js para gráficos -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Encabezado -->
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0;">
+  <!-- Encabezado y Controles -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
     <div>
-      <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #0f172a;">📊 Ranking Comercial de Asesores</h2>
-      <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b;">Rendimiento comercial consolidado por Trademarks</p>
+      <h2 style="color: #ffffff; margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 0.5px;">RANKING DE VENTAS TOP 10</h2>
+      <p style="color: #94a3b8; margin: 4px 0 0 0; font-size: 14px;">Resultados Consolidados del Período</p>
     </div>
-    <div style="font-size: 12px; background-color: #e0f2fe; color: #0369a1; padding: 6px 12px; border-radius: 20px; font-weight: 600;">
-      Actualizado: Reparto Lunes (Septiembre 2026)
-    </div>
-  </div>
-
-  <!-- Métricas Generales (KPIs) -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
-    <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6;">
-      <span style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Facturación Total</span>
-      <div id="kpi-facturacion" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">1.444.603,43 €</div>
-    </div>
-    <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #10b981;">
-      <span style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Total Matrículas</span>
-      <div id="kpi-ventas" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">640</div>
-    </div>
-    <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #f59e0b;">
-      <span style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Asesores Visibles</span>
-      <div id="kpi-asesores" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">83</div>
-    </div>
-    <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; border-left: 4px solid #8b5cf6;">
-      <span style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase;">Ticket Medio / Venta</span>
-      <div id="kpi-ticket" style="font-size: 22px; font-weight: 700; color: #1e293b; margin-top: 4px;">2.257,19 €</div>
-    </div>
-  </div>
-
-  <!-- Barra de Filtros, Búsqueda y Marca -->
-  <div style="background: #ffffff; padding: 16px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px;">
     
-    <!-- Botones Top Filter -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 600; color: #475569;">Ver:</span>
-      <button class="filter-btn" onclick="setTopFilter(3)" id="btn-top3" style="padding: 6px 12px; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: #334155;">Top 3</button>
-      <button class="filter-btn" onclick="setTopFilter(5)" id="btn-top5" style="padding: 6px 12px; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: #334155;">Top 5</button>
-      <button class="filter-btn" onclick="setTopFilter(10)" id="btn-top10" style="padding: 6px 12px; border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: #334155;">Top 10</button>
-      <button class="filter-btn active" onclick="setTopFilter(0)" id="btn-top0" style="padding: 6px 12px; border: 1px solid #2563eb; background: #2563eb; color: #ffffff; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">Todos</button>
-    </div>
-
-    <!-- Filtro por Marca -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 600; color: #475569;">Marca:</span>
-      <select id="brandFilter" onchange="renderDashboard()" style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background-color: #fff; cursor: pointer;">
-        <option value="TODAS">Todas las Marcas</option>
-        <option value="CEAC FP Oficial">CEAC FP Oficial</option>
-        <option value="Campus">Campus</option>
-        <option value="CEMP">CEMP</option>
-        <option value="Unisport">Unisport</option>
-        <option value="35mm">35mm</option>
-        <option value="Nubika">Nubika</option>
-        <option value="Tokio">Tokio</option>
-        <option value="Flou">Flou</option>
-        <option value="Mint">Mint</option>
-      </select>
-    </div>
-
-    <!-- Buscador -->
-    <div style="position: relative; flex-grow: 1; max-width: 260px;">
-      <input type="text" id="searchInput" onkeyup="filterData()" placeholder="🔍 Buscar asesor..." style="width: 100%; padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; box-sizing: border-box;">
-    </div>
-
-    <!-- Ordenación -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 600; color: #475569;">Ordenar:</span>
-      <select id="sortMetric" onchange="renderDashboard()" style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background-color: #fff; cursor: pointer;">
-        <option value="Registros">Matrículas</option>
-        <option value="Importe">Facturación (€)</option>
-      </select>
+    <!-- Botones para alternar Métrica -->
+    <div style="display: flex; gap: 8px; background: #0f172a; padding: 4px; border-radius: 10px; border: 1px solid #334155;">
+      <button id="btnVentas" onclick="updateRanking('ventas')" style="background: #00e676; color: #0f172a; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.2s;">Por Ventas</button>
+      <button id="btnEuros" onclick="updateRanking('euros')" style="background: transparent; color: #94a3b8; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.2s;">Por Facturación (€)</button>
     </div>
   </div>
 
-  <!-- Podio Top 3 Visual -->
-  <div id="podium-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 24px;"></div>
-
-  <!-- Sección de Gráficos -->
-  <div style="background: #ffffff; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 24px;">
-    <h3 style="margin: 0 0 16px 0; font-size: 16px; color: #1e293b;">📈 Comparativa de Rendimiento</h3>
-    <div style="position: relative; height: 300px; width: 100%;">
-      <canvas id="rankingChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Tabla de Posiciones -->
-  <div style="background: #ffffff; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden; overflow-x: auto;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-      <thead>
-        <tr style="background-color: #f1f5f9; border-bottom: 2px solid #e2e8f0; color: #475569;">
-          <th style="padding: 12px 16px; width: 50px; text-align: center;">#</th>
-          <th style="padding: 12px 16px;">Asesor</th>
-          <th style="padding: 12px 16px;">Distribución por Marca</th>
-          <th style="padding: 12px 16px; text-align: right;">Matrículas</th>
-          <th style="padding: 12px 16px; text-align: right;">Facturación Total</th>
-          <th style="padding: 12px 16px; text-align: right;">Ticket Medio</th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-        <!-- Relleno dinámico -->
-      </tbody>
-    </table>
+  <!-- Contenedor del Gráfico -->
+  <div style="position: relative; height: 420px; width: 100%;">
+    <canvas id="moodleRankingChart"></canvas>
   </div>
 </div>
 
 <script>
-// Dataset extraído de 'ranking lunes.xlsx'
-const rawDataWithBrands = [
-  {"Asesor": "Beatriz Fernandez-España Barral", "Importe": 26380.0, "Registros": 12, "Marcas": [{"Marca": "Flou", "Importe": 26380.0, "Registros": 12}]},
-  {"Asesor": "Javier Deus Garcia", "Importe": 19210.0, "Registros": 6, "Marcas": [{"Marca": "Flou", "Importe": 19210.0, "Registros": 6}]},
-  {"Asesor": "Jose Vicente Martínez", "Importe": 31550.0, "Registros": 15, "Marcas": [{"Marca": "Flou", "Importe": 31550.0, "Registros": 15}]},
-  {"Asesor": "María Luz Vidal Cardalda", "Importe": 16044.0, "Registros": 10, "Marcas": [{"Marca": "Flou", "Importe": 16044.0, "Registros": 10}]},
-  {"Asesor": "Nuria Mariño Alonso", "Importe": 23590.0, "Registros": 9, "Marcas": [{"Marca": "Flou", "Importe": 23590.0, "Registros": 9}]},
-  {"Asesor": "Rocio Gerpe Barreiros", "Importe": 36920.0, "Registros": 18, "Marcas": [{"Marca": "Flou", "Importe": 36920.0, "Registros": 18}]},
-  {"Asesor": "Helen Rachell Aviles Bárcenas", "Importe": 7760.0, "Registros": 3, "Marcas": [{"Marca": "Flou", "Importe": 7760.0, "Registros": 3}]},
-  {"Asesor": "Maria Alejandra Fernandez Gonzalez", "Importe": 1776.0, "Registros": 2, "Marcas": [{"Marca": "Flou", "Importe": 1776.0, "Registros": 2}]},
-  {"Asesor": "Alvaro Tineo Meza", "Importe": 35985.0, "Registros": 15, "Marcas": [{"Marca": "35mm", "Importe": 35985.0, "Registros": 15}]},
-  {"Asesor": "Ana Cristina Sousa Díaz", "Importe": 16450.0, "Registros": 5, "Marcas": [{"Marca": "35mm", "Importe": 16450.0, "Registros": 5}]},
-  {"Asesor": "Laura Varela Allo", "Importe": 19100.0, "Registros": 9, "Marcas": [{"Marca": "35mm", "Importe": 19100.0, "Registros": 9}]},
-  {"Asesor": "Rocio Perez Lopez", "Importe": 0.0, "Registros": 0, "Marcas": [{"Marca": "35mm", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Santiago Concheiro Álvarez", "Importe": 12578.0, "Registros": 4, "Marcas": [{"Marca": "35mm", "Importe": 12578.0, "Registros": 4}]},
-  {"Asesor": "Esperanza Ruiz San Martín", "Importe": 30050.0, "Registros": 12, "Marcas": [{"Marca": "35mm", "Importe": 30050.0, "Registros": 12}]},
-  {"Asesor": "Irene Blanco Rodriguez", "Importe": 1862.0, "Registros": 2, "Marcas": [{"Marca": "35mm", "Importe": 1862.0, "Registros": 2}]},
-  {"Asesor": "Valeria Ledo Gonzalo", "Importe": 8632.0, "Registros": 5, "Marcas": [{"Marca": "35mm", "Importe": 8632.0, "Registros": 5}]},
-  {"Asesor": "Estefania Iglesias Delgado", "Importe": 14190.0, "Registros": 6, "Marcas": [{"Marca": "Nubika", "Importe": 14190.0, "Registros": 6}]},
-  {"Asesor": "Ileana Waisman Martinez", "Importe": 10632.0, "Registros": 6, "Marcas": [{"Marca": "Nubika", "Importe": 10632.0, "Registros": 6}]},
-  {"Asesor": "Maria Cruz Baltodano Chavarria", "Importe": 30604.0, "Registros": 16, "Marcas": [{"Marca": "Nubika", "Importe": 30604.0, "Registros": 16}]},
-  {"Asesor": "Oscar Vilar Lombardero", "Importe": 35346.0, "Registros": 18, "Marcas": [{"Marca": "Nubika", "Importe": 35346.0, "Registros": 18}]},
-  {"Asesor": "Beatriz Queiruga Penedo", "Importe": 38780.0, "Registros": 17, "Marcas": [{"Marca": "Nubika", "Importe": 38780.0, "Registros": 17}]},
-  {"Asesor": "Gloria María Compaire Izuel", "Importe": 22892.55, "Registros": 15, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 22892.55, "Registros": 15}]},
-  {"Asesor": "Jayone Garijo Ruiz", "Importe": 46597.5, "Registros": 25, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 39927.5, "Registros": 22}, {"Marca": "Campus", "Importe": 6670.0, "Registros": 3}]},
-  {"Asesor": "Leticia María Argüelles Blanco", "Importe": 28651.97, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 19691.97, "Registros": 10}, {"Marca": "Campus", "Importe": 8960.0, "Registros": 4}]},
-  {"Asesor": "Lillian LLanos LLanos", "Importe": 31679.74, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 31679.74, "Registros": 14}]},
-  {"Asesor": "Lucia Perez Rodriguez", "Importe": 11192.26, "Registros": 7, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 11192.26, "Registros": 7}]},
-  {"Asesor": "Manuel Jesus Aguilar Luque", "Importe": 41700.91, "Registros": 22, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 28460.91, "Registros": 16}, {"Marca": "Campus", "Importe": 13240.0, "Registros": 6}]},
-  {"Asesor": "Maria Lourdes Manzano Fernandez", "Importe": 9376.5, "Registros": 7, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 9376.5, "Registros": 7}]},
-  {"Asesor": "Isabel Abalo de Dios", "Importe": 39332.52, "Registros": 22, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 37142.52, "Registros": 21}, {"Marca": "Campus", "Importe": 2190.0, "Registros": 1}]},
-  {"Asesor": "Ana Blanco González", "Importe": 28256.0, "Registros": 14, "Marcas": [{"Marca": "Campus", "Importe": 28256.0, "Registros": 14}]},
-  {"Asesor": "Ana María Fuentes Fuentes", "Importe": 13040.0, "Registros": 7, "Marcas": [{"Marca": "Campus", "Importe": 13040.0, "Registros": 7}]},
-  {"Asesor": "Ana Yolanda Otero Revenga", "Importe": 22338.0, "Registros": 13, "Marcas": [{"Marca": "Campus", "Importe": 22338.0, "Registros": 13}]},
-  {"Asesor": "Lorena Angeriz Lopez", "Importe": 4180.0, "Registros": 2, "Marcas": [{"Marca": "Campus", "Importe": 4180.0, "Registros": 2}]},
-  {"Asesor": "Margarita Garcia Iglesias", "Importe": 18324.0, "Registros": 12, "Marcas": [{"Marca": "Campus", "Importe": 18324.0, "Registros": 12}]},
-  {"Asesor": "Maria Lourdes Alonso Nuñez", "Importe": 17320.0, "Registros": 8, "Marcas": [{"Marca": "Campus", "Importe": 17320.0, "Registros": 8}]},
-  {"Asesor": "Sofia Ines Garcia Saavedra", "Importe": 2090.0, "Registros": 10, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 10}]},
-  {"Asesor": "Tatiana Andres Docal", "Importe": 21172.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 21172.0, "Registros": 3}]},
-  {"Asesor": "Alejandro Garcia Delgado", "Importe": 2290.0, "Registros": 6, "Marcas": [{"Marca": "Campus", "Importe": 2290.0, "Registros": 6}]},
-  {"Asesor": "Carlos Miguez Gracia", "Importe": 22384.0, "Registros": 8, "Marcas": [{"Marca": "Campus", "Importe": 16970.0, "Registros": 3}, {"Marca": "Campus", "Importe": 5414.0, "Registros": 5}]},
-  {"Asesor": "Gloria Maria Compaire Izuel", "Importe": 6470.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 6470.0, "Registros": 3}]},
-  {"Asesor": "Lucía Pérez Rodríguez", "Importe": 2090.0, "Registros": 1, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 1}]},
-  {"Asesor": "Maria Lourdes Manzano Fernández", "Importe": 1946.0, "Registros": 2, "Marcas": [{"Marca": "Campus", "Importe": 1946.0, "Registros": 2}]},
-  {"Asesor": "María Alonso Nuñez", "Importe": 0.0, "Registros": 0, "Marcas": [{"Marca": "Mint", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Sandra Alvarez Lourido", "Importe": 9887.0, "Registros": 3, "Marcas": [{"Marca": "Mint", "Importe": 9887.0, "Registros": 3}]},
-  {"Asesor": "Fátima Fernández Martínez", "Importe": 41090.0, "Registros": 12, "Marcas": [{"Marca": "CEMP", "Importe": 41090.0, "Registros": 12}]},
-  {"Asesor": "Jacob Martinez Gonzalez", "Importe": 25730.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 25730.0, "Registros": 9}]},
-  {"Asesor": "Lourdes Quintela Fraga", "Importe": 26930.0, "Registros": 8, "Marcas": [{"Marca": "CEMP", "Importe": 26930.0, "Registros": 8}]},
-  {"Asesor": "Maria Begoña Diaz Melendez", "Importe": 39924.0, "Registros": 12, "Marcas": [{"Marca": "CEMP", "Importe": 39924.0, "Registros": 12}]},
-  {"Asesor": "Maria Jesus Prado Mosquera", "Importe": 15060.0, "Registros": 4, "Marcas": [{"Marca": "CEMP", "Importe": 15060.0, "Registros": 4}]},
-  {"Asesor": "Natalia Almudena Graña Suarez", "Importe": 21174.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 21174.0, "Registros": 9}]},
-  {"Asesor": "Noelia Ares Patiño", "Importe": 5562.48, "Registros": 2, "Marcas": [{"Marca": "CEMP", "Importe": 5562.48, "Registros": 2}]},
-  {"Asesor": "Carmen Vazquez Ferro", "Importe": 21044.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 21044.0, "Registros": 9}]},
-  {"Asesor": "Lorena Lago Piñeiro", "Importe": 3890.0, "Registros": 1, "Marcas": [{"Marca": "CEMP", "Importe": 3890.0, "Registros": 1}]},
-  {"Asesor": "Maria Lopez Regueira", "Importe": 20270.0, "Registros": 6, "Marcas": [{"Marca": "CEMP", "Importe": 20270.0, "Registros": 6}]},
-  {"Asesor": "Mónica Orjales Ormaechea", "Importe": 12948.0, "Registros": 7, "Marcas": [{"Marca": "CEMP", "Importe": 12948.0, "Registros": 7}]},
-  {"Asesor": "Antonio Javier Eijo Cal", "Importe": 7172.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 7172.0, "Registros": 4}]},
-  {"Asesor": "Diego Felipe De Araujo", "Importe": 17475.0, "Registros": 7, "Marcas": [{"Marca": "Tokio", "Importe": 17475.0, "Registros": 7}]},
-  {"Asesor": "Ivan Dopico Rodriguez", "Importe": 10282.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10282.0, "Registros": 4}]},
-  {"Asesor": "Lucía Ugarte Brandariz", "Importe": 13054.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 13054.0, "Registros": 6}]},
-  {"Asesor": "Miguel Ángel Villarroel Valenzuela", "Importe": 15542.0, "Registros": 8, "Marcas": [{"Marca": "Tokio", "Importe": 15542.0, "Registros": 8}]},
-  {"Asesor": "Robin Mario De Miranda De Miranda", "Importe": 2690.0, "Registros": 1, "Marcas": [{"Marca": "Tokio", "Importe": 2690.0, "Registros": 1}]},
-  {"Asesor": "Vanessa Andreina De Angelis", "Importe": 18030.0, "Registros": 7, "Marcas": [{"Marca": "Tokio", "Importe": 18030.0, "Registros": 7}]},
-  {"Asesor": "Jaime Paz Fernandez", "Importe": 10660.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10660.0, "Registros": 4}]},
-  {"Asesor": "Jose Pablo Otero Acevedo", "Importe": 26002.0, "Registros": 11, "Marcas": [{"Marca": "Tokio", "Importe": 26002.0, "Registros": 11}]},
-  {"Asesor": "Luis Enrique Perez Cordova", "Importe": 16310.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 16310.0, "Registros": 6}]},
-  {"Asesor": "Marcelo García Cruz", "Importe": 8470.0, "Registros": 3, "Marcas": [{"Marca": "Tokio", "Importe": 8470.0, "Registros": 3}]},
-  {"Asesor": "Andrea Fernández España Colón", "Importe": 7520.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 7520.0, "Registros": 3}]},
-  {"Asesor": "Brais Prieto Mexigos", "Importe": 18920.0, "Registros": 8, "Marcas": [{"Marca": "Unisport", "Importe": 18920.0, "Registros": 8}]},
-  {"Asesor": "Carlos Matías Dos Santos Mora", "Importe": 30040.0, "Registros": 11, "Marcas": [{"Marca": "Unisport", "Importe": 30040.0, "Registros": 11}]},
-  {"Asesor": "David Dopico", "Importe": 6970.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 6970.0, "Registros": 3}]},
-  {"Asesor": "Gabriel Antonio Donis Tato", "Importe": 41790.0, "Registros": 15, "Marcas": [{"Marca": "Unisport", "Importe": 41790.0, "Registros": 15}]},
-  {"Asesor": "Gemma Fernández Nogueira", "Importe": 8720.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 8720.0, "Registros": 3}]},
-  {"Asesor": "Gerardo Manuel Roca Felpeto", "Importe": 18004.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 18004.0, "Registros": 7}]},
-  {"Asesor": "José Manuel Doldán Miras", "Importe": 12060.0, "Registros": 4, "Marcas": [{"Marca": "Unisport", "Importe": 12060.0, "Registros": 4}]},
-  {"Asesor": "Laura Costoya", "Importe": 15240.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 15240.0, "Registros": 6}]},
-  {"Asesor": "Lorena Daranae Zuloaga Sanchez", "Importe": 4780.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 4780.0, "Registros": 2}]},
-  {"Asesor": "Marcos Casal Bellón", "Importe": 14540.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 14540.0, "Registros": 6}]},
-  {"Asesor": "Maria Virginia Graterol Valera", "Importe": 5830.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 5830.0, "Registros": 2}]},
-  {"Asesor": "Rafael Mella Ferreiro", "Importe": 18040.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 18040.0, "Registros": 6}]},
-  {"Asesor": "Robin Mario De Miranda Miranda", "Importe": -200.0, "Registros": 0, "Marcas": [{"Marca": "Unisport", "Importe": -200.0, "Registros": 0}]},
-  {"Asesor": "Victor Guerra Vazquez", "Importe": 20080.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 20080.0, "Registros": 7}]},
-  {"Asesor": "Yanet Gabriela Garcia Vielma", "Importe": 11600.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 11600.0, "Registros": 5}]},
-  {"Asesor": "Yolanda González Rodríguez", "Importe": 10710.0, "Registros": 4, "Marcas": [{"Marca": "Unisport", "Importe": 10710.0, "Registros": 4}]}
-];
-
-let currentTopFilter = 0; // 0 = Todos
-let chartInstance = null;
-
-const formatCurrency = (amount) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(amount);
-
-const brandColors = {
-  'Campus': '#3b82f6',
-  'CEAC FP Oficial': '#059669',
-  'Nubika': '#d97706',
-  '35mm': '#7c3aed',
-  'CEMP': '#dc2626',
-  'Flou': '#ec4899',
-  'Unisport': '#0284c7',
-  'Tokio': '#4f46e5',
-  'Mint': '#10b981'
-};
-
-function setTopFilter(count) {
-  currentTopFilter = count;
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.style.background = '#f8fafc';
-    btn.style.color = '#334155';
-    btn.style.borderColor = '#cbd5e1';
-  });
-  const activeBtn = document.getElementById(`btn-top${count}`);
-  if(activeBtn) {
-    activeBtn.style.background = '#2563eb';
-    activeBtn.style.color = '#ffffff';
-    activeBtn.style.borderColor = '#2563eb';
-  }
-  renderDashboard();
-}
-
-function filterData() {
-  renderDashboard();
-}
-
-function getProcessedData() {
-  const metric = document.getElementById('sortMetric').value;
-  const selectedBrand = document.getElementById('brandFilter').value;
-  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-
-  let processed = [];
-
-  rawDataWithBrands.forEach(item => {
-    let filteredMarcas = item.Marcas;
-    if (selectedBrand !== 'TODAS') {
-      filteredMarcas = item.Marcas.filter(m => m.Marca === selectedBrand);
-    }
-
-    if (filteredMarcas.length > 0) {
-      const imp = filteredMarcas.reduce((acc, m) => acc + m.Importe, 0);
-      const reg = filteredMarcas.reduce((acc, m) => acc + m.Registros, 0);
-      
-      processed.push({
-        Asesor: item.Asesor,
-        Importe: imp,
-        Registros: reg,
-        Marcas: filteredMarcas
-      });
-    }
-  });
-
-  if (searchTerm) {
-    processed = processed.filter(item => item.Asesor.toLowerCase().includes(searchTerm));
-  }
-
-  processed.sort((a, b) => b[metric] - a[metric]);
-
-  if (currentTopFilter > 0) {
-    processed = processed.slice(0, currentTopFilter);
-  }
-
-  return { data: processed, metric, selectedBrand };
-}
-
-function updateKPIs(data) {
-  const totalFacturacion = data.reduce((acc, curr) => acc + curr.Importe, 0);
-  const totalVentas = data.reduce((acc, curr) => acc + curr.Registros, 0);
-  const totalAsesores = data.length;
-  const ticketMedio = totalVentas > 0 ? totalFacturacion / totalVentas : 0;
-
-  document.getElementById('kpi-facturacion').textContent = formatCurrency(totalFacturacion);
-  document.getElementById('kpi-ventas').textContent = totalVentas;
-  document.getElementById('kpi-asesores').textContent = totalAsesores;
-  document.getElementById('kpi-ticket').textContent = formatCurrency(ticketMedio);
-}
-
-function renderPodium(topData, metric) {
-  const container = document.getElementById('podium-container');
-  container.innerHTML = '';
-
-  if (topData.length === 0) return;
-
-  const podiumColors = [
-    { bg: '#fef9c3', border: '#eab308', badge: '🥇 1º Puesto', color: '#854d0e' },
-    { bg: '#f1f5f9', border: '#94a3b8', badge: '🥈 2º Puesto', color: '#334155' },
-    { bg: '#ffedd5', border: '#f97316', badge: '🥉 3º Puesto', color: '#9a3412' }
+  // Datos Top 10 consolidados por Ventas y Facturación
+  const dataVentas = [
+    { name: "Jayone Garijo Ruiz", value: 25, label: "25 ventas", sub: "46.597,50 €" },
+    { name: "Manuel Jesus Aguilar Luque", value: 22, label: "22 ventas", sub: "41.700,91 €" },
+    { name: "Isabel Abalo de Dios", value: 22, label: "22 ventas", sub: "39.332,52 €" },
+    { name: "Rocio Gerpe Barreiros", value: 18, label: "18 ventas", sub: "36.920,00 €" },
+    { name: "Oscar Vilar Lombardero", value: 18, label: "18 ventas", sub: "35.346,00 €" },
+    { name: "Gloria María Compaire Izuel", value: 18, label: "18 ventas", sub: "29.362,55 €" },
+    { name: "Beatriz Queiruga Penedo", value: 17, label: "17 ventas", sub: "38.780,00 €" },
+    { name: "Maria Cruz Baltodano Chavarria", value: 16, label: "16 ventas", sub: "30.604,00 €" },
+    { name: "Gabriel Antonio Donis Tato", value: 15, label: "15 ventas", sub: "41.790,00 €" },
+    { name: "Alvaro Tineo Meza", value: 15, label: "15 ventas", sub: "35.985,00 €" }
   ];
 
-  const top3 = topData.slice(0, 3);
-  top3.forEach((item, index) => {
-    const style = podiumColors[index];
-    const card = document.createElement('div');
-    card.style.cssText = `background: ${style.bg}; border: 2px solid ${style.border}; border-radius: 10px; padding: 16px; text-align: center; font-weight: 600; color: ${style.color};`;
-    card.innerHTML = `
-      <div style="font-size: 13px; font-weight: 700; margin-bottom: 6px;">${style.badge}</div>
-      <div style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">${item.Asesor}</div>
-      <div style="font-size: 18px; font-weight: 800; color: #1e293b;">${metric === 'Importe' ? formatCurrency(item.Importe) : item.Registros + ' Matrículas'}</div>
-      <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
-        ${metric === 'Importe' ? item.Registros + ' ventas' : formatCurrency(item.Importe)}
-      </div>
-    `;
-    container.appendChild(card);
-  });
-}
+  const dataEuros = [
+    { name: "Jayone Garijo Ruiz", value: 46597.50, label: "46.597,50 €", sub: "25 ventas" },
+    { name: "Gabriel Antonio Donis Tato", value: 41790.00, label: "41.790,00 €", sub: "15 ventas" },
+    { name: "Manuel Jesus Aguilar Luque", value: 41700.91, label: "41.700,91 €", sub: "22 ventas" },
+    { name: "Fátima Fernández Martínez", value: 41090.00, label: "41.090,00 €", sub: "12 ventas" },
+    { name: "Maria Begoña Diaz Melendez", value: 39924.00, label: "39.924,00 €", sub: "12 ventas" },
+    { name: "Isabel Abalo de Dios", value: 39332.52, label: "39.332,52 €", sub: "22 ventas" },
+    { name: "Beatriz Queiruga Penedo", value: 38780.00, label: "38.780,00 €", sub: "17 ventas" },
+    { name: "Rocio Gerpe Barreiros", value: 36920.00, label: "36.920,00 €", sub: "18 ventas" },
+    { name: "Alvaro Tineo Meza", value: 35985.00, label: "35.985,00 €", sub: "15 ventas" },
+    { name: "Oscar Vilar Lombardero", value: 35346.00, label: "35.346,00 €", sub: "18 ventas" }
+  ];
 
-function renderChart(data, metric) {
-  const ctx = document.getElementById('rankingChart').getContext('2d');
-  
-  if (chartInstance) {
-    chartInstance.destroy();
-  }
+  let currentChart = null;
 
-  const topChartData = data.slice(0, 10);
-  const labels = topChartData.map(item => item.Asesor.split(' ')[0] + ' ' + (item.Asesor.split(' ')[1] || ''));
-  const values = topChartData.map(item => item[metric]);
+  function renderChart(dataSet) {
+    const ctx = document.getElementById('moodleRankingChart').getContext('2d');
+    
+    // Paleta de colores para Top 3 (Oro, Plata, Bronce) y resto
+    const colors = [
+      '#ffd700', '#c0c0c0', '#cd7f32', 
+      '#00e676', '#00e676', '#00e676', '#00e676', '#00e676', '#00e676', '#00e676'
+    ];
 
-  chartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: metric === 'Importe' ? 'Facturación Total (€)' : 'Número de Matrículas',
-        data: values,
-        backgroundColor: '#3b82f6',
-        borderRadius: 6,
-        hoverBackgroundColor: '#2563eb'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              let val = context.raw;
-              return metric === 'Importe' ? ' ' + formatCurrency(val) : ' ' + val + ' matrículas';
+    if (currentChart) {
+      currentChart.destroy();
+    }
+
+    currentChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: dataSet.map(d => d.name),
+        datasets: [{
+          data: dataSet.map(d => d.value),
+          backgroundColor: colors,
+          borderRadius: 6,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const item = dataSet[context.dataIndex];
+                return ' ' + item.label + ' (' + item.sub + ')';
+              }
             }
           }
+        },
+        scales: {
+          x: {
+            grid: { color: '#334155' },
+            ticks: { color: '#94a3b8' }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: '#ffffff', font: { weight: 'bold', size: 13 } }
+          }
         }
-      },
-      scales: {
-        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-        x: { grid: { display: false } }
       }
-    }
-  });
-}
-
-function renderTable(data, metric) {
-  const tbody = document.getElementById('table-body');
-  tbody.innerHTML = '';
-
-  if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="padding: 24px; text-align: center; color: #64748b;">No se encontraron asesores con los criterios seleccionados.</td></tr>`;
-    return;
+    });
   }
 
-  data.forEach((item, index) => {
-    const tr = document.createElement('tr');
-    tr.style.borderBottom = '1px solid #f1f5f9';
-    if (index % 2 === 1) tr.style.backgroundColor = '#fafafa';
+  function updateRanking(type) {
+    const btnV = document.getElementById('btnVentas');
+    const btnE = document.getElementById('btnEuros');
 
-    const ticketMedio = item.Registros > 0 ? item.Importe / item.Registros : 0;
+    if (type === 'ventas') {
+      btnV.style.background = '#00e676';
+      btnV.style.color = '#0f172a';
+      btnE.style.background = 'transparent';
+      btnE.style.color = '#94a3b8';
+      renderChart(dataVentas);
+    } else {
+      btnE.style.background = '#00e676';
+      btnE.style.color = '#0f172a';
+      btnV.style.background = 'transparent';
+      btnV.style.color = '#94a3b8';
+      renderChart(dataEuros);
+    }
+  }
 
-    let rankBadge = `<span style="font-weight: 700; color: #64748b;">${index + 1}</span>`;
-    if (index === 0) rankBadge = `<span style="background: #fef08a; color: #854d0e; padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 12px;">1º</span>`;
-    if (index === 1) rankBadge = `<span style="background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 12px;">2º</span>`;
-    if (index === 2) rankBadge = `<span style="background: #ffedd5; color: #9a3412; padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 12px;">3º</span>`;
-
-    // Render marcas Badges
-    const marcasBadges = item.Marcas.map(m => {
-      const bgColor = brandColors[m.Marca] || '#64748b';
-      return `<span style="background-color: ${bgColor}15; color: ${bgColor}; border: 1px solid ${bgColor}40; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap;">
-        ${m.Marca} (${m.Registros})
-      </span>`;
-    }).join(' ');
-
-    tr.innerHTML = `
-      <td style="padding: 12px 16px; text-align: center;">${rankBadge}</td>
-      <td style="padding: 12px 16px; font-weight: 600; color: #0f172a;">${item.Asesor}</td>
-      <td style="padding: 12px 16px;"><div style="display: flex; gap: 6px; flex-wrap: wrap;">${marcasBadges}</div></td>
-      <td style="padding: 12px 16px; text-align: right; font-weight: 700; color: #2563eb;">${item.Registros}</td>
-      <td style="padding: 12px 16px; text-align: right; font-weight: 700; color: #059669;">${formatCurrency(item.Importe)}</td>
-      <td style="padding: 12px 16px; text-align: right; color: #475569;">${formatCurrency(ticketMedio)}</td>
-    `;
-    tbody.appendChild(tr);
+  document.addEventListener("DOMContentLoaded", function() {
+    renderChart(dataVentas);
   });
-}
-
-function renderDashboard() {
-  const { data, metric } = getProcessedData();
-  updateKPIs(data);
-  renderPodium(data, metric);
-  renderChart(data, metric);
-  renderTable(data, metric);
-}
-
-// Inicializar al cargar
-document.addEventListener('DOMContentLoaded', () => {
-  renderDashboard();
-});
 </script>
