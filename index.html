@@ -1,420 +1,961 @@
-<!-- DASHBOARD RANKING ASESORES - MODO CLARO - MOODLE READY -->
-<div id="moodle-ranking-dashboard" style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #0f172a; padding: 24px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01); max-width: 1200px; margin: 0 auto;">
-  
-  <!-- Carga CDN Chart.js para gráficos -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Encabezado -->
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 2px solid #e2e8f0;">
-    <div>
-      <h2 style="margin: 0; font-size: 26px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">📊 Ranking Comercial de Asesores</h2>
-      <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b; font-weight: 500;">Rendimiento comercial y métricas de matriculación multimarca</p>
-    </div>
-    <div style="font-size: 12px; background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 20px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
-      <span style="width: 8px; height: 8px; background-color: #2563eb; border-radius: 50%;"></span>
-      Actualizado: 29/09/2026
-    </div>
-  </div>
-
-  <!-- Métricas Generales (KPIs) -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
-    <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #2563eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Facturación Total</span>
-      <div id="kpi-facturacion" style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px;">1.532.916,13 €</div>
-    </div>
-    <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #059669; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Total Matrículas</span>
-      <div id="kpi-ventas" style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px;">631</div>
-    </div>
-    <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #d97706; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Asesores Visibles</span>
-      <div id="kpi-asesores" style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px;">81</div>
-    </div>
-    <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #7c3aed; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Ticket Medio / Venta</span>
-      <div id="kpi-ticket" style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px;">2.429,34 €</div>
-    </div>
-  </div>
-
-  <!-- Barra de Filtros, Búsqueda y Marca -->
-  <div style="background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-    
-    <!-- Botones Top Filter -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 700; color: #475569; margin-right: 2px;">Vista:</span>
-      <button class="filter-btn" onclick="setTopFilter(3)" id="btn-top3" style="padding: 7px 13px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; color: #334155; transition: all 0.2s;">Top 3</button>
-      <button class="filter-btn" onclick="setTopFilter(5)" id="btn-top5" style="padding: 7px 13px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; color: #334155; transition: all 0.2s;">Top 5</button>
-      <button class="filter-btn" onclick="setTopFilter(10)" id="btn-top10" style="padding: 7px 13px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; color: #334155; transition: all 0.2s;">Top 10</button>
-      <button class="filter-btn active" onclick="setTopFilter(0)" id="btn-top0" style="padding: 7px 13px; border: 1px solid #2563eb; background: #2563eb; color: #ffffff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all 0.2s;">Todos</button>
-    </div>
-
-    <!-- Filtro por Marca -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 700; color: #475569;">Marca:</span>
-      <select id="brandFilter" onchange="renderDashboard()" style="padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 600; background-color: #ffffff; color: #0f172a; cursor: pointer; outline: none;">
-        <option value="TODAS">Todas las Marcas</option>
-        <option value="CEAC FP Oficial">CEAC FP Oficial</option>
-        <option value="Campus">Campus</option>
-        <option value="CEMP">CEMP</option>
-        <option value="Unisport">Unisport</option>
-        <option value="35mm">35mm</option>
-        <option value="Nubika">Nubika</option>
-        <option value="Tokio">Tokio</option>
-        <option value="Flou">Flou</option>
-        <option value="Mint">Mint</option>
-      </select>
-    </div>
-
-    <!-- Buscador -->
-    <div style="position: relative; flex-grow: 1; max-width: 260px;">
-      <input type="text" id="searchInput" onkeyup="filterData()" placeholder="🔍 Buscar asesor..." style="width: 100%; padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; background-color: #ffffff; color: #0f172a; box-sizing: border-box;">
-    </div>
-
-    <!-- Ordenación -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 700; color: #475569;">Ordenar:</span>
-      <select id="sortMetric" onchange="renderDashboard()" style="padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 600; background-color: #ffffff; color: #0f172a; cursor: pointer; outline: none;">
-        <option value="Registros">Matrículas</option>
-        <option value="Importe">Facturación (€)</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Podio Top 3 Visual -->
-  <div id="podium-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px;"></div>
-
-  <!-- Sección de Gráficos -->
-  <div style="background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 700; color: #0f172a;">📈 Comparativa de Rendimiento</h3>
-    <div style="position: relative; height: 300px; width: 100%;">
-      <canvas id="rankingChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Tabla de Posiciones -->
-  <div style="background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow-x: auto;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-      <thead>
-        <tr style="background-color: #f1f5f9; border-bottom: 2px solid #e2e8f0; color: #475569; font-weight: 700;">
-          <th style="padding: 14px 16px; width: 50px; text-align: center;">#</th>
-          <th style="padding: 14px 16px;">Asesor</th>
-          <th style="padding: 14px 16px;">Distribución por Marca</th>
-          <th style="padding: 14px 16px; text-align: right;">Matrículas</th>
-          <th style="padding: 14px 16px; text-align: right;">Facturación Total</th>
-          <th style="padding: 14px 16px; text-align: right;">Ticket Medio</th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-        <!-- Relleno dinámico -->
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-// Dataset depurado extraído de 'ranking2909_1.xlsx'
-const rawDataWithBrands = [
-  {"Asesor": "Beatriz Fernandez-España Barral", "Importe": 26380.0, "Registros": 12, "Marcas": [{"Marca": "Flou", "Importe": 26380.0, "Registros": 12}]},
-  {"Asesor": "Javier Deus Garcia", "Importe": 19210.0, "Registros": 7, "Marcas": [{"Marca": "Flou", "Importe": 19210.0, "Registros": 7}]},
-  {"Asesor": "Jose Vicente Martínez", "Importe": 33640.0, "Registros": 16, "Marcas": [{"Marca": "Flou", "Importe": 33640.0, "Registros": 16}]},
-  {"Asesor": "María Luz Vidal Cardalda", "Importe": 17834.0, "Registros": 9, "Marcas": [{"Marca": "Flou", "Importe": 17834.0, "Registros": 9}]},
-  {"Asesor": "Nuria Mariño Alonso", "Importe": 29560.0, "Registros": 12, "Marcas": [{"Marca": "Flou", "Importe": 29560.0, "Registros": 12}]},
-  {"Asesor": "Rocio Gerpe Barreiros", "Importe": 41100.0, "Registros": 20, "Marcas": [{"Marca": "Flou", "Importe": 41100.0, "Registros": 20}]},
-  {"Asesor": "Helen Rachell Aviles Bárcenas", "Importe": 7760.0, "Registros": 3, "Marcas": [{"Marca": "Flou", "Importe": 7760.0, "Registros": 3}]},
-  {"Asesor": "Maria Alejandra Fernandez Gonzalez", "Importe": 1776.0, "Registros": 1, "Marcas": [{"Marca": "Flou", "Importe": 1776.0, "Registros": 1}]},
-  {"Asesor": "Alvaro Tineo Meza", "Importe": 35985.0, "Registros": 15, "Marcas": [{"Marca": "35mm", "Importe": 35985.0, "Registros": 15}]},
-  {"Asesor": "Ana Cristina Sousa Díaz", "Importe": 19740.0, "Registros": 6, "Marcas": [{"Marca": "35mm", "Importe": 19740.0, "Registros": 6}]},
-  {"Asesor": "Laura Varela Allo", "Importe": 23380.0, "Registros": 10, "Marcas": [{"Marca": "35mm", "Importe": 23380.0, "Registros": 10}]},
-  {"Asesor": "Rocio Perez Lopez", "Importe": 0.0, "Registros": 0, "Marcas": [{"Marca": "35mm", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Santiago Concheiro Álvarez", "Importe": 18318.0, "Registros": 6, "Marcas": [{"Marca": "35mm", "Importe": 18318.0, "Registros": 6}]},
-  {"Asesor": "Esperanza Ruiz San Martín", "Importe": 32740.0, "Registros": 13, "Marcas": [{"Marca": "35mm", "Importe": 32740.0, "Registros": 13}]},
-  {"Asesor": "Irene Blanco Rodriguez", "Importe": 1862.0, "Registros": 1, "Marcas": [{"Marca": "35mm", "Importe": 1862.0, "Registros": 1}]},
-  {"Asesor": "Valeria Ledo Gonzalo", "Importe": 10494.0, "Registros": 5, "Marcas": [{"Marca": "35mm", "Importe": 10494.0, "Registros": 5}]},
-  {"Asesor": "Estefania Iglesias Delgado", "Importe": 14190.0, "Registros": 6, "Marcas": [{"Marca": "Nubika", "Importe": 14190.0, "Registros": 6}]},
-  {"Asesor": "Ileana Waisman Martinez", "Importe": 10632.0, "Registros": 5, "Marcas": [{"Marca": "Nubika", "Importe": 10632.0, "Registros": 5}]},
-  {"Asesor": "Maria Cruz Baltodano Chavarria", "Importe": 35284.0, "Registros": 16, "Marcas": [{"Marca": "Nubika", "Importe": 35284.0, "Registros": 16}]},
-  {"Asesor": "Oscar Vilar Lombardero", "Importe": 42466.0, "Registros": 19, "Marcas": [{"Marca": "Nubika", "Importe": 42466.0, "Registros": 19}]},
-  {"Asesor": "Beatriz Queiruga Penedo", "Importe": 40769.0, "Registros": 18, "Marcas": [{"Marca": "Nubika", "Importe": 40769.0, "Registros": 18}]},
-  {"Asesor": "Gloria María Compaire Izuel", "Importe": 24618.05, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 24618.05, "Registros": 14}]},
-  {"Asesor": "Jayone Garijo Ruiz", "Importe": 50615.0, "Registros": 24, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 41755.0, "Registros": 20}, {"Marca": "Campus", "Importe": 8860.0, "Registros": 4}]},
-  {"Asesor": "Leticia María Argüelles Blanco", "Importe": 28651.97, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 19691.97, "Registros": 10}, {"Marca": "Campus", "Importe": 8960.0, "Registros": 4}]},
-  {"Asesor": "Lillian LLanos LLanos", "Importe": 31679.74, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 31679.74, "Registros": 14}, {"Marca": "Campus", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Lucia Perez Rodriguez", "Importe": 14372.26, "Registros": 9, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 12282.26, "Registros": 8}, {"Marca": "Campus", "Importe": 2090.0, "Registros": 1}]},
-  {"Asesor": "Manuel Jesus Aguilar Luque", "Importe": 43730.71, "Registros": 23, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 30490.71, "Registros": 17}, {"Marca": "Campus", "Importe": 13240.0, "Registros": 6}]},
-  {"Asesor": "Maria Lourdes Manzano Fernandez", "Importe": 11322.5, "Registros": 6, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 9376.5, "Registros": 5}, {"Marca": "Campus", "Importe": 1946.0, "Registros": 1}]},
-  {"Asesor": "Isabel Abalo de Dios", "Importe": 39332.52, "Registros": 22, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 37142.52, "Registros": 21}, {"Marca": "Campus", "Importe": 2190.0, "Registros": 1}]},
-  {"Asesor": "Ana Blanco González", "Importe": 30546.0, "Registros": 14, "Marcas": [{"Marca": "Campus", "Importe": 30546.0, "Registros": 14}]},
-  {"Asesor": "Ana María Fuentes Fuentes", "Importe": 19482.0, "Registros": 10, "Marcas": [{"Marca": "Campus", "Importe": 19482.0, "Registros": 10}]},
-  {"Asesor": "Ana Yolanda Otero Revenga", "Importe": 22338.0, "Registros": 11, "Marcas": [{"Marca": "Campus", "Importe": 22338.0, "Registros": 11}]},
-  {"Asesor": "Lorena Angeriz Lopez", "Importe": 6042.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 6042.0, "Registros": 3}]},
-  {"Asesor": "Margarita Garcia Iglesias", "Importe": 18324.0, "Registros": 9, "Marcas": [{"Marca": "Campus", "Importe": 18324.0, "Registros": 9}, {"Marca": "Mint", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Maria Lourdes Alonso Nuñez", "Importe": 17320.0, "Registros": 8, "Marcas": [{"Marca": "Campus", "Importe": 17320.0, "Registros": 8}, {"Marca": "Mint", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Rocio Ponte", "Importe": 2090.0, "Registros": 1, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 1}]},
-  {"Asesor": "Sofia Ines Garcia Saavedra", "Importe": 2090.0, "Registros": 10, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 10}]},
-  {"Asesor": "Tatiana Andres Docal", "Importe": 21172.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 21172.0, "Registros": 3}]},
-  {"Asesor": "Alejandro Garcia Delgado", "Importe": 6156.0, "Registros": 7, "Marcas": [{"Marca": "Campus", "Importe": 6156.0, "Registros": 7}]},
-  {"Asesor": "Carlos Miguez Gracia", "Importe": 19060.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 19060.0, "Registros": 3}]},
-  {"Asesor": "Gloria Maria Compaire Izuel", "Importe": 6470.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 6470.0, "Registros": 3}]},
-  {"Asesor": "Sandra Alvarez Lourido", "Importe": 12555.9, "Registros": 4, "Marcas": [{"Marca": "Mint", "Importe": 12555.9, "Registros": 4}]},
-  {"Asesor": "Fátima Fernández Martínez", "Importe": 41090.0, "Registros": 12, "Marcas": [{"Marca": "CEMP", "Importe": 41090.0, "Registros": 12}]},
-  {"Asesor": "Jacob Martinez Gonzalez", "Importe": 25730.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 25730.0, "Registros": 9}]},
-  {"Asesor": "Lourdes Quintela Fraga", "Importe": 26930.0, "Registros": 8, "Marcas": [{"Marca": "CEMP", "Importe": 26930.0, "Registros": 8}]},
-  {"Asesor": "Maria Begoña Diaz Melendez", "Importe": 43614.0, "Registros": 13, "Marcas": [{"Marca": "CEMP", "Importe": 43614.0, "Registros": 13}]},
-  {"Asesor": "Maria Jesus Prado Mosquera", "Importe": 15060.0, "Registros": 4, "Marcas": [{"Marca": "CEMP", "Importe": 15060.0, "Registros": 4}]},
-  {"Asesor": "Natalia Almudena Graña Suarez", "Importe": 21174.0, "Registros": 11, "Marcas": [{"Marca": "CEMP", "Importe": 21174.0, "Registros": 11}]},
-  {"Asesor": "Noelia Ares Patiño", "Importe": 5562.48, "Registros": 2, "Marcas": [{"Marca": "CEMP", "Importe": 5562.48, "Registros": 2}]},
-  {"Asesor": "Carmen Vazquez Ferro", "Importe": 21044.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 21044.0, "Registros": 9}]},
-  {"Asesor": "Lorena Lago Piñeiro", "Importe": 3890.0, "Registros": 1, "Marcas": [{"Marca": "CEMP", "Importe": 3890.0, "Registros": 1}]},
-  {"Asesor": "Maria Lopez Regueira", "Importe": 20270.0, "Registros": 6, "Marcas": [{"Marca": "CEMP", "Importe": 20270.0, "Registros": 6}]},
-  {"Asesor": "Mónica Orjales Ormaechea", "Importe": 14972.0, "Registros": 7, "Marcas": [{"Marca": "CEMP", "Importe": 14972.0, "Registros": 7}]},
-  {"Asesor": "Antonio Javier Eijo Cal", "Importe": 7172.0, "Registros": 3, "Marcas": [{"Marca": "Tokio", "Importe": 7172.0, "Registros": 3}]},
-  {"Asesor": "Diego Felipe De Araujo", "Importe": 17475.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 17475.0, "Registros": 6}]},
-  {"Asesor": "Ivan Dopico Rodriguez", "Importe": 10282.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10282.0, "Registros": 4}]},
-  {"Asesor": "Lucía Ugarte Brandariz", "Importe": 13054.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 13054.0, "Registros": 6}]},
-  {"Asesor": "Miguel Ángel Villarroel Valenzuela", "Importe": 18032.0, "Registros": 7, "Marcas": [{"Marca": "Tokio", "Importe": 18032.0, "Registros": 7}]},
-  {"Asesor": "Robin Mario De Miranda De Miranda", "Importe": 2690.0, "Registros": 1, "Marcas": [{"Marca": "Tokio", "Importe": 2690.0, "Registros": 1}]},
-  {"Asesor": "Vanessa Andreina De Angelis", "Importe": 18030.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 18030.0, "Registros": 6}]},
-  {"Asesor": "Jaime Paz Fernandez", "Importe": 10660.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10660.0, "Registros": 4}]},
-  {"Asesor": "Jose Pablo Otero Acevedo", "Importe": 26002.0, "Registros": 10, "Marcas": [{"Marca": "Tokio", "Importe": 26002.0, "Registros": 10}]},
-  {"Asesor": "Luis Enrique Perez Cordova", "Importe": 16310.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 16310.0, "Registros": 6}]},
-  {"Asesor": "Marcelo García Cruz", "Importe": 8470.0, "Registros": 3, "Marcas": [{"Marca": "Tokio", "Importe": 8470.0, "Registros": 3}]},
-  {"Asesor": "Andrea Fernández España Colón", "Importe": 14400.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 14400.0, "Registros": 5}]},
-  {"Asesor": "Brais Prieto Mexigos", "Importe": 22110.0, "Registros": 9, "Marcas": [{"Marca": "Unisport", "Importe": 22110.0, "Registros": 9}]},
-  {"Asesor": "Carlos Matías Dos Santos Mora", "Importe": 30040.0, "Registros": 11, "Marcas": [{"Marca": "Unisport", "Importe": 30040.0, "Registros": 11}]},
-  {"Asesor": "David Dopico", "Importe": 6970.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 6970.0, "Registros": 3}]},
-  {"Asesor": "Gabriel Antonio Donis Tato", "Importe": 41790.0, "Registros": 16, "Marcas": [{"Marca": "Unisport", "Importe": 41790.0, "Registros": 16}]},
-  {"Asesor": "Gemma Fernández Nogueira", "Importe": 8720.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 8720.0, "Registros": 3}]},
-  {"Asesor": "Gerardo Manuel Roca Felpeto", "Importe": 18004.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 18004.0, "Registros": 7}]},
-  {"Asesor": "José Manuel Doldán Miras", "Importe": 12060.0, "Registros": 4, "Marcas": [{"Marca": "Unisport", "Importe": 12060.0, "Registros": 4}]},
-  {"Asesor": "Laura Costoya", "Importe": 15240.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 15240.0, "Registros": 6}]},
-  {"Asesor": "Lorena Daranae Zuloaga Sanchez", "Importe": 4780.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 4780.0, "Registros": 2}]},
-  {"Asesor": "Marcos Casal Bellón", "Importe": 14540.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 14540.0, "Registros": 6}]},
-  {"Asesor": "Maria Virginia Graterol Valera", "Importe": 5830.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 5830.0, "Registros": 2}]},
-  {"Asesor": "Rafael Mella Ferreiro", "Importe": 18040.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 18040.0, "Registros": 6}]},
-  {"Asesor": "Robin Mario De Miranda Miranda", "Importe": -200.0, "Registros": 0, "Marcas": [{"Marca": "Unisport", "Importe": -200.0, "Registros": 0}]},
-  {"Asesor": "Victor Guerra Vazquez", "Importe": 20080.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 20080.0, "Registros": 7}]},
-  {"Asesor": "Yanet Gabriela Garcia Vielma", "Importe": 11600.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 11600.0, "Registros": 5}]},
-  {"Asesor": "Yolanda González Rodríguez", "Importe": 12400.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 12400.0, "Registros": 5}]}
-];
-
-let currentTopFilter = 0; // 0 = Todos
-let chartInstance = null;
-
-const formatCurrency = (amount) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(amount);
-
-const brandColors = {
-  'Campus': '#2563eb',
-  'CEAC FP Oficial': '#059669',
-  'Nubika': '#d97706',
-  '35mm': '#7c3aed',
-  'CEMP': '#dc2626',
-  'Flou': '#db2777',
-  'Unisport': '#0284c7',
-  'Tokio': '#4f46e5',
-  'Mint': '#10b981'
-};
-
-function setTopFilter(count) {
-  currentTopFilter = count;
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.style.background = '#ffffff';
-    btn.style.color = '#334155';
-    btn.style.borderColor = '#cbd5e1';
-  });
-  const activeBtn = document.getElementById(`btn-top${count}`);
-  if(activeBtn) {
-    activeBtn.style.background = '#2563eb';
-    activeBtn.style.color = '#ffffff';
-    activeBtn.style.borderColor = '#2563eb';
-  }
-  renderDashboard();
-}
-
-function filterData() {
-  renderDashboard();
-}
-
-function getProcessedData() {
-  const metric = document.getElementById('sortMetric').value;
-  const selectedBrand = document.getElementById('brandFilter').value;
-  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-
-  let processed = [];
-
-  rawDataWithBrands.forEach(item => {
-    let filteredMarcas = item.Marcas;
-    if (selectedBrand !== 'TODAS') {
-      filteredMarcas = item.Marcas.filter(m => m.Marca === selectedBrand);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Comercial & Académico - Integración Moodle</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
-
-    if (filteredMarcas.length > 0) {
-      const imp = filteredMarcas.reduce((acc, m) => acc + m.Importe, 0);
-      const reg = filteredMarcas.reduce((acc, m) => acc + m.Registros, 0);
-      
-      processed.push({
-        Asesor: item.Asesor,
-        Importe: imp,
-        Registros: reg,
-        Marcas: filteredMarcas
-      });
+    .tab-btn.active {
+      border-color: #2563eb;
+      color: #1d4ed8;
+      background-color: #eff6ff;
     }
-  });
+    .badge-green { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .badge-blue { background-color: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-amber { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .badge-purple { background-color: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+    .badge-gray { background-color: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
 
-  if (searchTerm) {
-    processed = processed.filter(item => item.Asesor.toLowerCase().includes(searchTerm));
-  }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased p-3 sm:p-6 min-h-screen">
 
-  processed.sort((a, b) => b[metric] - a[metric]);
+  <div class="max-w-7xl mx-auto space-y-6">
 
-  if (currentTopFilter > 0) {
-    processed = processed.slice(0, currentTopFilter);
-  }
-
-  return { data: processed, metric, selectedBrand };
-}
-
-function updateKPIs(data) {
-  const totalFacturacion = data.reduce((acc, curr) => acc + curr.Importe, 0);
-  const totalVentas = data.reduce((acc, curr) => acc + curr.Registros, 0);
-  const totalAsesores = data.length;
-  const ticketMedio = totalVentas > 0 ? totalFacturacion / totalVentas : 0;
-
-  document.getElementById('kpi-facturacion').textContent = formatCurrency(totalFacturacion);
-  document.getElementById('kpi-ventas').textContent = totalVentas;
-  document.getElementById('kpi-asesores').textContent = totalAsesores;
-  document.getElementById('kpi-ticket').textContent = formatCurrency(ticketMedio);
-}
-
-function renderPodium(topData, metric) {
-  const container = document.getElementById('podium-container');
-  container.innerHTML = '';
-
-  if (topData.length === 0) return;
-
-  const podiumColors = [
-    { bg: '#fefce8', border: '#eab308', badge: '🥇 1º Puesto', color: '#854d0e' },
-    { bg: '#f8fafc', border: '#94a3b8', badge: '🥈 2º Puesto', color: '#334155' },
-    { bg: '#fff7ed', border: '#f97316', badge: '🥉 3º Puesto', color: '#9a3412' }
-  ];
-
-  const top3 = topData.slice(0, 3);
-  top3.forEach((item, index) => {
-    const style = podiumColors[index];
-    const card = document.createElement('div');
-    card.style.cssText = `background: ${style.bg}; border: 2px solid ${style.border}; border-radius: 12px; padding: 18px; text-align: center; font-weight: 600; color: ${style.color}; box-shadow: 0 2px 4px rgba(0,0,0,0.02);`;
-    card.innerHTML = `
-      <div style="font-size: 13px; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.5px;">${style.badge}</div>
-      <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">${item.Asesor}</div>
-      <div style="font-size: 20px; font-weight: 800; color: #1e293b;">${metric === 'Importe' ? formatCurrency(item.Importe) : item.Registros + ' Matrículas'}</div>
-      <div style="font-size: 13px; color: #64748b; margin-top: 4px; font-weight: 600;">
-        ${metric === 'Importe' ? item.Registros + ' ventas' : formatCurrency(item.Importe)}
+    <!-- HEADER / BANNER MOODLE -->
+    <header class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Dashboard de Rendimiento Comercial</h1>
+            <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-orange-100 text-orange-800 border border-orange-200">
+              Moodle Add-on
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500">Métricas consolidadas de cupones, ventas ordinarias y becas por marcas formativas</p>
+        </div>
       </div>
-    `;
-    container.appendChild(card);
-  });
-}
 
-function renderChart(data, metric) {
-  const ctx = document.getElementById('rankingChart').getContext('2d');
-  
-  if (chartInstance) {
-    chartInstance.destroy();
-  }
+      <div class="flex items-center gap-2">
+        <button onclick="exportToCSV()" class="px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Exportar CSV
+        </button>
+        <button onclick="switchTab('tab-moodle')" class="px-3.5 py-2 text-xs sm:text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition flex items-center gap-1.5 shadow-sm shadow-blue-600/30">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+          </svg>
+          Integrar en Moodle
+        </button>
+      </div>
+    </header>
 
-  const topChartData = data.slice(0, 10);
-  const labels = topChartData.map(item => item.Asesor.split(' ')[0] + ' ' + (item.Asesor.split(' ')[1] || ''));
-  const values = topChartData.map(item => item[metric]);
+    <!-- NAVEGACIÓN POR PESTAÑAS -->
+    <div class="flex border-b border-slate-200 gap-2 overflow-x-auto pb-1 text-sm font-medium">
+      <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="tab-btn active px-4 py-2.5 rounded-xl border border-transparent transition flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        Vista General & Gráficos
+      </button>
+      <button onclick="switchTab('tab-advisors')" id="btn-tab-advisors" class="tab-btn px-4 py-2.5 rounded-xl border border-transparent transition text-slate-600 hover:text-slate-900 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        Detalle por Asesor
+      </button>
+      <button onclick="switchTab('tab-scholarships')" id="btn-tab-scholarships" class="tab-btn px-4 py-2.5 rounded-xl border border-transparent transition text-slate-600 hover:text-slate-900 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+        </svg>
+        Becas & Rebecas
+      </button>
+      <button onclick="switchTab('tab-moodle')" id="btn-tab-moodle" class="tab-btn px-4 py-2.5 rounded-xl border border-transparent transition text-slate-600 hover:text-slate-900 flex items-center gap-2">
+        <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        Instalación en Moodle
+      </button>
+    </div>
 
-  chartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: metric === 'Importe' ? 'Facturación Total (€)' : 'Número de Matrículas',
-        data: values,
-        backgroundColor: '#2563eb',
-        borderRadius: 8,
-        hoverBackgroundColor: '#1d4ed8'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f172a',
-          titleFont: { size: 13, weight: 'bold' },
-          bodyFont: { size: 13 },
-          padding: 10,
-          displayColors: false,
-          callbacks: {
-            label: function(context) {
-              let val = context.raw;
-              return metric === 'Importe' ? ' ' + formatCurrency(val) : ' ' + val + ' matrículas';
-            }
-          }
+    <!-- FILTROS GLOBALES -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-center">
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">Filtrar por Marca / Escuela</label>
+        <select id="brandFilter" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="ALL">Todas las Marcas (9)</option>
+          <option value="FLOU">FLOU</option>
+          <option value="35MM">35MM</option>
+          <option value="NUBIKA">NUBIKA</option>
+          <option value="CEAC">CEAC</option>
+          <option value="CAMPUS">CAMPUS</option>
+          <option value="MINT">MINT</option>
+          <option value="CEMP">CEMP</option>
+          <option value="TOKIO">TOKIO</option>
+          <option value="UNISPORT">UNISPORT</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">Buscar Asesor / Comercial</label>
+        <div class="relative">
+          <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Nombre del comercial..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">Ordenar por</label>
+        <select id="sortBy" onchange="applyFilters()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="revenue-desc">Facturación (€) - Mayor a menor</option>
+          <option value="sales-desc">Ventas totales - Mayor a menor</option>
+          <option value="conv-desc">Tasa de Conversión - Mayor a menor</option>
+          <option value="coupons-desc">Cupones recibidos - Mayor a menor</option>
+          <option value="name-asc">Nombre del Asesor (A - Z)</option>
+        </select>
+      </div>
+
+      <div class="flex items-end h-full">
+        <button onclick="resetFilters()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-3 rounded-xl text-sm transition flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          Restablecer Filtros
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI CARDS SUMMARY -->
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow transition">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Facturación Total</span>
+          <div class="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+        </div>
+        <div id="kpi-revenue" class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">0 €</div>
+        <p class="text-[11px] text-slate-500 mt-1">Ingresos directos por matrículas</p>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow transition">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ventas Totales</span>
+          <div class="p-2 rounded-xl bg-blue-50 text-blue-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+          </div>
+        </div>
+        <div id="kpi-sales" class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">0</div>
+        <div id="kpi-sales-breakdown" class="text-[11px] text-slate-500 mt-1">Normal: 0 | Beca: 0</div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow transition">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Cupones / Leads</span>
+          <div class="p-2 rounded-xl bg-purple-50 text-purple-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
+            </svg>
+          </div>
+        </div>
+        <div id="kpi-coupons" class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">0</div>
+        <div id="kpi-coupons-breakdown" class="text-[11px] text-slate-500 mt-1">Normal + Beca/Rebeca</div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow transition">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Conversión Media</span>
+          <div class="p-2 rounded-xl bg-amber-50 text-amber-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+            </svg>
+          </div>
+        </div>
+        <div id="kpi-conversion" class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">0.00%</div>
+        <p class="text-[11px] text-slate-500 mt-1">Ratio ventas / cupones normal</p>
+      </div>
+
+      <div class="col-span-2 lg:col-span-1 bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow transition">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Top Comercial</span>
+          <div class="p-2 rounded-xl bg-rose-50 text-rose-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+            </svg>
+          </div>
+        </div>
+        <div id="kpi-top-agent" class="text-sm sm:text-base font-bold text-slate-900 truncate">-</div>
+        <div id="kpi-top-metric" class="text-[11px] text-rose-600 font-semibold mt-1">-</div>
+      </div>
+    </div>
+
+    <!-- TAB 1: OVERVIEW -->
+    <div id="tab-overview" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Facturación Acumulada por Marca (€)</h2>
+              <p class="text-xs text-slate-500">Volumen de negocio generado según la selección actual</p>
+            </div>
+            <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-blue-50 text-blue-700">En Euros</span>
+          </div>
+          <div id="brandRevenueChart" class="space-y-3 pt-2"></div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-base font-bold text-slate-900">Conversión por Marca</h2>
+              <span class="px-2 py-0.5 text-xs font-semibold rounded bg-slate-100 text-slate-600">Promedios</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Rendimiento porcentual de conversión de cupones ordinarios</p>
+            <div id="brandConversionList" class="space-y-2.5"></div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 bg-slate-50/70 p-3 rounded-xl text-xs text-slate-600">
+            <div class="flex items-center gap-2 font-medium text-slate-800 mb-1">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Benchmark Comercial
+            </div>
+            La marca con mayor eficiencia es <b id="benchmark-best-brand" class="text-slate-900">-</b> con <span id="benchmark-best-rate" class="text-emerald-600 font-bold">-</span> de conversión media.
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">🏆 Top 10 Asesores Comerciales</h2>
+            <p class="text-xs text-slate-500">Líderes de rendimiento ordenados por facturación directa</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="setTopChartMetric('revenue')" id="btn-top-rev" class="px-3 py-1 text-xs font-semibold rounded-lg bg-blue-600 text-white">Por Facturación (€)</button>
+            <button onclick="setTopChartMetric('sales')" id="btn-top-sales" class="px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">Por Ventas</button>
+          </div>
+        </div>
+        <div id="topAdvisorsChart" class="space-y-2.5 pt-2"></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: DETALLE POR ASESOR -->
+    <div id="tab-advisors" class="space-y-4 hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Listado Completo de Comerciales y Asesores</h2>
+            <p class="text-xs text-slate-500">Mostrando <span id="tableCount" class="font-semibold text-slate-800">0</span> registros analizados</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-500">Filas por página:</span>
+            <select id="pageSize" onchange="changePageSize()" class="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-700">
+              <option value="15">15</option>
+              <option value="30">30</option>
+              <option value="50">50</option>
+              <option value="100">Todas</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-100/80 text-slate-600 font-semibold uppercase tracking-wider text-[11px] border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-4">Marca</th>
+                <th class="py-3 px-4">Asesor Comercial</th>
+                <th class="py-3 px-4 text-right">Cupones</th>
+                <th class="py-3 px-4 text-right">Ventas Norm.</th>
+                <th class="py-3 px-4 text-right">Conversión</th>
+                <th class="py-3 px-4 text-right">Facturación</th>
+                <th class="py-3 px-4 text-right">Cupones Beca</th>
+                <th class="py-3 px-4 text-right">Ventas Beca</th>
+                <th class="py-3 px-4 text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="advisorsTableBody" class="divide-y divide-slate-100 text-slate-700"></tbody>
+          </table>
+        </div>
+
+        <div class="flex items-center justify-between mt-4 text-xs text-slate-500">
+          <div id="paginationInfo">Página 1 de 1</div>
+          <div class="flex gap-1.5" id="paginationControls"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: BECAS & REBECAS -->
+    <div id="tab-scholarships" class="space-y-6 hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">🎓 Programa de Becas y Rebecas</h2>
+            <p class="text-xs text-slate-500">Distribución de cupones subvencionados y matriculaciones especiales</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 pt-2">
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-center">
+              <span class="text-[11px] text-slate-500 font-medium block">Total Becas</span>
+              <span id="becas-total-becas" class="text-lg font-bold text-slate-800">0</span>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-center">
+              <span class="text-[11px] text-slate-500 font-medium block">Total Rebecas</span>
+              <span id="becas-total-rebecas" class="text-lg font-bold text-slate-800">0</span>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-center">
+              <span class="text-[11px] text-slate-500 font-medium block">Ventas de Beca</span>
+              <span id="becas-total-ventas" class="text-lg font-bold text-emerald-600">0</span>
+            </div>
+          </div>
+
+          <div class="space-y-3 pt-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Distribución de Cupones Beca por Marca</h3>
+            <div id="becasBrandChart" class="space-y-2"></div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Top Asesores en Conversión de Becas</h2>
+            <p class="text-xs text-slate-500">Comerciales con mayor volumen de matriculaciones de beca</p>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-semibold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3">Asesor</th>
+                  <th class="py-2.5 px-3">Marca</th>
+                  <th class="py-2.5 px-3 text-right">Cupones Beca</th>
+                  <th class="py-2.5 px-3 text-right">Ventas Beca</th>
+                  <th class="py-2.5 px-3 text-right">Conversión Beca</th>
+                </tr>
+              </thead>
+              <tbody id="topBecaTableBody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: GUÍA DE INTEGRACIÓN EN MOODLE -->
+    <div id="tab-moodle" class="space-y-6 hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-orange-100 text-orange-700">Moodle LMS</span>
+            <h2 class="text-lg font-bold text-slate-900">Guía de Integración Rápida en Moodle</h2>
+          </div>
+          <p class="text-sm text-slate-600 mt-1">Sigue estos sencillos métodos para mostrar este dashboard a tus coordinadores, tutores o directores de curso en Moodle.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="border border-slate-200 rounded-2xl p-5 bg-slate-50/50 space-y-3">
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+              <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">1</span>
+              Método Recomendado: Bloque HTML o Página Moodle
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Ideal para añadir como bloque lateral en el Área Personal (Dashboard), en un curso de coordinación o como Recurso tipo <b>"Página"</b>.
+            </p>
+            <ol class="text-xs text-slate-600 space-y-1.5 list-decimal list-inside pl-1">
+              <li>En Moodle, pulsa en <b>"Activar modo de edición"</b>.</li>
+              <li>Haz clic en <b>"Añadir un bloque"</b> &rarr; Selecciona <b>"HTML"</b>.</li>
+              <li>Configura el bloque y en el editor haz clic en el icono <b>&lt; / &gt; (Código HTML)</b>.</li>
+              <li>Pega el código de incrustación que se muestra a continuación y guarda los cambios.</li>
+            </ol>
+            
+            <div class="mt-3">
+              <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+                <span>Código iFrame Moodle</span>
+                <button onclick="copySnippet('snippet-iframe')" class="text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                  Copiar
+                </button>
+              </div>
+              <textarea id="snippet-iframe" readonly class="w-full bg-slate-900 text-slate-200 font-mono text-[11px] p-3 rounded-xl h-24 resize-none focus:outline-none"><iframe src="dashboard_moodle.html" style="width:100%; height:820px; border:none; border-radius:16px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);" title="Dashboard Comercial Moodle" allowfullscreen></iframe></textarea>
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-2xl p-5 bg-slate-50/50 space-y-3">
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+              <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs">2</span>
+              Método Directo: Subir como Archivo HTML al Curso
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Puedes subir este archivo autónomo a los archivos del curso de Moodle sin extensiones de servidor.
+            </p>
+            <ol class="text-xs text-slate-600 space-y-1.5 list-decimal list-inside pl-1">
+              <li>En el curso de Moodle, haz clic en <b>"Añadir una actividad o recurso"</b>.</li>
+              <li>Selecciona <b>"Archivo"</b> o <b>"Área de texto y medios"</b>.</li>
+              <li>Sube este archivo HTML y configúralo como <i>"Incrustar"</i>.</li>
+              <li>Configura restricciones para que solo roles directivos o tutores puedan verlo.</li>
+            </ol>
+
+            <div class="mt-4 pt-3 border-t border-slate-200">
+              <button onclick="downloadHTML()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Descargar dashboard_moodle.html
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="text-center text-xs text-slate-400 py-4">
+      Dashboard Comercial Moodle • Marcas: FLOU, 35MM, NUBIKA, CEAC, CAMPUS, MINT, CEMP, TOKIO, UNISPORT
+    </footer>
+
+  </div>
+
+  <script>
+    const rawSalesData = [
+      { brand: "FLOU", name: "Beatriz Fernandez-España Barral", coupons: 272, sales: 12, conv: 4.41, revenue: 26380, becas: 127, rebecas: 72, totalBecaCoupons: 199, becaSales: 0, becaConv: 0.0 },
+      { brand: "FLOU", name: "Javier Deus Garcia", coupons: 253, sales: 7, conv: 2.77, revenue: 19210, becas: 127, rebecas: 117, totalBecaCoupons: 244, becaSales: -1, becaConv: -0.41 },
+      { brand: "FLOU", name: "Jose Vicente Martínez", coupons: 350, sales: 16, conv: 4.57, revenue: 33640, becas: 176, rebecas: 85, totalBecaCoupons: 261, becaSales: 0, becaConv: 0.0 },
+      { brand: "FLOU", name: "María Luz Vidal Cardalda", coupons: 210, sales: 9, conv: 4.29, revenue: 17834, becas: 130, rebecas: 56, totalBecaCoupons: 186, becaSales: 2, becaConv: 1.08 },
+      { brand: "FLOU", name: "Nuria Mariño Alonso", coupons: 261, sales: 12, conv: 4.60, revenue: 29560, becas: 74, rebecas: 36, totalBecaCoupons: 110, becaSales: 0, becaConv: 0.0 },
+      { brand: "FLOU", name: "Rocio Gerpe Barreiros", coupons: 322, sales: 20, conv: 6.21, revenue: 41100, becas: 110, rebecas: 90, totalBecaCoupons: 200, becaSales: 0, becaConv: 0.0 },
+      { brand: "FLOU", name: "Helen Rachell Aviles Bárcenas", coupons: 154, sales: 3, conv: 1.95, revenue: 7760, becas: 1, rebecas: 1, totalBecaCoupons: 172, becaSales: 0, becaConv: 0.0 },
+      { brand: "FLOU", name: "Maria Alejandra Fernandez Gonzalez", coupons: 65, sales: 1, conv: 1.54, revenue: 1776, becas: 119, rebecas: 44, totalBecaCoupons: 163, becaSales: 1, becaConv: 0.61 },
+
+      { brand: "35MM", name: "Alvaro Tineo Meza", coupons: 336, sales: 15, conv: 4.76, revenue: 35985, becas: 1, rebecas: 0, totalBecaCoupons: 1, becaSales: 0, becaConv: 0.0 },
+      { brand: "35MM", name: "Ana Cristina Sousa Díaz", coupons: 142, sales: 6, conv: 4.23, revenue: 19740, becas: 130, rebecas: 20, totalBecaCoupons: 150, becaSales: 0, becaConv: 0.0 },
+      { brand: "35MM", name: "Laura Varela Allo", coupons: 323, sales: 10, conv: 3.10, revenue: 23380, becas: 100, rebecas: 0, totalBecaCoupons: 100, becaSales: 2, becaConv: 2.0 },
+      { brand: "35MM", name: "Rocio Perez Lopez", coupons: 69, sales: 0, conv: 0.0, revenue: 0, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "35MM", name: "Santiago Concheiro Álvarez", coupons: 270, sales: 6, conv: 3.70, revenue: 18318, becas: 14, rebecas: 10, totalBecaCoupons: 24, becaSales: 0, becaConv: 0.0 },
+      { brand: "35MM", name: "Esperanza Ruiz San Martín", coupons: 268, sales: 13, conv: 4.85, revenue: 32740, becas: 90, rebecas: 0, totalBecaCoupons: 90, becaSales: 0, becaConv: 0.0 },
+      { brand: "35MM", name: "Irene Blanco Rodriguez", coupons: 76, sales: 1, conv: 1.32, revenue: 1862, becas: 198, rebecas: 145, totalBecaCoupons: 343, becaSales: 1, becaConv: 0.29 },
+      { brand: "35MM", name: "Valeria Ledo Gonzalo", coupons: 148, sales: 5, conv: 3.38, revenue: 10494, becas: 190, rebecas: 0, totalBecaCoupons: 190, becaSales: 2, becaConv: 1.05 },
+
+      { brand: "NUBIKA", name: "Estefania Iglesias Delgado", coupons: 242, sales: 6, conv: 2.48, revenue: 14190, becas: 128, rebecas: 55, totalBecaCoupons: 183, becaSales: 0, becaConv: 0.0 },
+      { brand: "NUBIKA", name: "Ileana Waisman Martinez", coupons: 190, sales: 5, conv: 2.63, revenue: 10632, becas: 89, rebecas: 20, totalBecaCoupons: 109, becaSales: 1, becaConv: 0.92 },
+      { brand: "NUBIKA", name: "Maria Cruz Baltodano Chavarria", coupons: 370, sales: 16, conv: 4.32, revenue: 35284, becas: 112, rebecas: 0, totalBecaCoupons: 112, becaSales: 2, becaConv: 1.79 },
+      { brand: "NUBIKA", name: "Oscar Vilar Lombardero", coupons: 340, sales: 19, conv: 5.59, revenue: 42466, becas: 27, rebecas: 0, totalBecaCoupons: 27, becaSales: 2, becaConv: 7.41 },
+      { brand: "NUBIKA", name: "Beatriz Queiruga Penedo", coupons: 285, sales: 18, conv: 6.32, revenue: 40769, becas: 37, rebecas: 35, totalBecaCoupons: 72, becaSales: 1, becaConv: 1.39 },
+
+      { brand: "CEAC", name: "Gloria María Compaire Izuel", coupons: 369, sales: 14, conv: 3.79, revenue: 24618.05, becas: 123, rebecas: 0, totalBecaCoupons: 123, becaSales: 2, becaConv: 1.63 },
+      { brand: "CEAC", name: "Jayone Garijo Ruiz", coupons: 408, sales: 20, conv: 4.90, revenue: 41755, becas: 95, rebecas: 0, totalBecaCoupons: 95, becaSales: 2, becaConv: 2.11 },
+      { brand: "CEAC", name: "Leticia María Argüelles Blanco", coupons: 222, sales: 10, conv: 4.50, revenue: 19691.97, becas: 248, rebecas: 0, totalBecaCoupons: 248, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEAC", name: "Lillian LLanos LLanos", coupons: 355, sales: 14, conv: 3.94, revenue: 31679.74, becas: 40, rebecas: 0, totalBecaCoupons: 40, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEAC", name: "Lucia Perez Rodriguez", coupons: 188, sales: 8, conv: 4.26, revenue: 12282.26, becas: 148, rebecas: 0, totalBecaCoupons: 148, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEAC", name: "Manuel Jesus Aguilar Luque", coupons: 385, sales: 17, conv: 4.42, revenue: 30490.71, becas: 55, rebecas: 0, totalBecaCoupons: 55, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEAC", name: "Maria Lourdes Manzano Fernandez", coupons: 180, sales: 5, conv: 2.78, revenue: 9376.5, becas: 201, rebecas: 0, totalBecaCoupons: 201, becaSales: 2, becaConv: 1.0 },
+      { brand: "CEAC", name: "Isabel Abalo de Dios", coupons: 377, sales: 21, conv: 5.57, revenue: 37142.52, becas: 35, rebecas: 0, totalBecaCoupons: 35, becaSales: 0, becaConv: 0.0 },
+
+      { brand: "CAMPUS", name: "Ana Blanco González (M)", coupons: 441, sales: 14, conv: 3.40, revenue: 30546, becas: 25, rebecas: 25, totalBecaCoupons: 50, becaSales: 1, becaConv: 2.0 },
+      { brand: "CAMPUS", name: "Ana María Fuentes Fuentes (M)", coupons: 233, sales: 10, conv: 4.29, revenue: 19482, becas: 340, rebecas: 20, totalBecaCoupons: 360, becaSales: 1, becaConv: 0.28 },
+      { brand: "CAMPUS", name: "Ana Yolanda Otero Revenga", coupons: 393, sales: 11, conv: 2.80, revenue: 22338, becas: 30, rebecas: 0, totalBecaCoupons: 30, becaSales: 2, becaConv: 6.67 },
+      { brand: "CAMPUS", name: "Lorena Angeriz Lopez", coupons: 86, sales: 3, conv: 3.49, revenue: 6042, becas: 266, rebecas: 60, totalBecaCoupons: 326, becaSales: 1, becaConv: 0.31 },
+      { brand: "CAMPUS", name: "Margarita Garcia Iglesias (M)", coupons: 350, sales: 9, conv: 2.57, revenue: 18324, becas: 90, rebecas: 0, totalBecaCoupons: 90, becaSales: 3, becaConv: 3.33 },
+      { brand: "CAMPUS", name: "Maria Lourdes Alonso Nuñez", coupons: 357, sales: 8, conv: 2.24, revenue: 17320, becas: 15, rebecas: 0, totalBecaCoupons: 15, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Rocio Ponte", coupons: 56, sales: 1, conv: 1.79, revenue: 2090, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Sofia Ines Garcia Saavedra (M)", coupons: 314, sales: 10, conv: 3.18, revenue: 2090, becas: 121, rebecas: 39, totalBecaCoupons: 160, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Tatiana Andres Docal (M)", coupons: 90, sales: 3, conv: 3.33, revenue: 21172, becas: 227, rebecas: 110, totalBecaCoupons: 337, becaSales: 1, becaConv: 0.30 },
+      { brand: "CAMPUS", name: "Alejandro Garcia Delgado", coupons: 284, sales: 7, conv: 2.46, revenue: 6156, becas: 70, rebecas: 0, totalBecaCoupons: 70, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Carlos Miguez Gracia", coupons: 112, sales: 3, conv: 2.68, revenue: 19060, becas: 70, rebecas: 0, totalBecaCoupons: 70, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Gloria María Compaire (Campus)", coupons: 0, sales: 3, conv: 0.0, revenue: 6470, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Jayone Garijo Ruiz (Campus)", coupons: 0, sales: 4, conv: 0.0, revenue: 8860, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Leticia María Argüelles (Campus)", coupons: 0, sales: 4, conv: 0.0, revenue: 8960, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Manuel Jesus Aguilar (Campus)", coupons: 0, sales: 6, conv: 0.0, revenue: 13240, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Maria Lourdes Manzano (Campus)", coupons: 0, sales: 1, conv: 0.0, revenue: 1946, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 1, becaConv: 0.0 },
+      { brand: "CAMPUS", name: "Isabel Abalo de Dios (Campus)", coupons: 0, sales: 1, conv: 0.0, revenue: 2190, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+
+      { brand: "MINT", name: "Margarita Garcia Iglesias (Mint)", coupons: 62, sales: 0, conv: 0.0, revenue: 0, becas: 9, rebecas: 0, totalBecaCoupons: 9, becaSales: 0, becaConv: 0.0 },
+      { brand: "MINT", name: "Sandra Alvarez Lourido", coupons: 348, sales: 4, conv: 1.15, revenue: 12555.9, becas: 235, rebecas: 0, totalBecaCoupons: 235, becaSales: 1, becaConv: 0.43 },
+
+      { brand: "CEMP", name: "Fátima Fernández Martínez", coupons: 320, sales: 12, conv: 3.75, revenue: 41090, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Jacob Martinez Gonzalez", coupons: 283, sales: 9, conv: 3.18, revenue: 25730, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Lourdes Quintela Fraga", coupons: 290, sales: 8, conv: 2.76, revenue: 26930, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Maria Begoña Diaz Melendez", coupons: 262, sales: 13, conv: 4.96, revenue: 43614, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Maria Jesus Prado Mosquera", coupons: 165, sales: 4, conv: 2.42, revenue: 15060, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Natalia Almudena Graña Suarez", coupons: 349, sales: 11, conv: 3.15, revenue: 21174, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Noelia Ares Patiño", coupons: 127, sales: 2, conv: 1.57, revenue: 5562.48, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Carmen Vazquez Ferro", coupons: 209, sales: 9, conv: 4.31, revenue: 21044, becas: 5, rebecas: 7, totalBecaCoupons: 12, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Lorena Lago Piñeiro", coupons: 74, sales: 1, conv: 1.35, revenue: 3890, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Maria Lopez Regueira", coupons: 172, sales: 6, conv: 3.49, revenue: 20270, becas: 0, rebecas: 7, totalBecaCoupons: 7, becaSales: 0, becaConv: 0.0 },
+      { brand: "CEMP", name: "Mónica Orjales Ormaechea", coupons: 193, sales: 7, conv: 3.63, revenue: 14972, becas: 13, rebecas: 7, totalBecaCoupons: 20, becaSales: 1, becaConv: 5.0 },
+
+      { brand: "TOKIO", name: "Antonio Javier Eijo Cal (M)", coupons: 121, sales: 3, conv: 2.48, revenue: 7172, becas: 39, rebecas: 4, totalBecaCoupons: 43, becaSales: 1, becaConv: 2.33 },
+      { brand: "TOKIO", name: "Diego Felipe De Araujo", coupons: 201, sales: 6, conv: 2.99, revenue: 17475, becas: 39, rebecas: 4, totalBecaCoupons: 43, becaSales: 1, becaConv: 2.33 },
+      { brand: "TOKIO", name: "Ivan Dopico Rodriguez (M)", coupons: 192, sales: 4, conv: 2.08, revenue: 10282, becas: 65, rebecas: 0, totalBecaCoupons: 65, becaSales: 0, becaConv: 0.0 },
+      { brand: "TOKIO", name: "Lucía Ugarte Brandariz", coupons: 218, sales: 6, conv: 2.75, revenue: 13054, becas: 89, rebecas: 0, totalBecaCoupons: 89, becaSales: 1, becaConv: 1.12 },
+      { brand: "TOKIO", name: "Miguel Ángel Villarroel Valenzuela", coupons: 313, sales: 7, conv: 2.56, revenue: 18032, becas: 121, rebecas: 0, totalBecaCoupons: 121, becaSales: 2, becaConv: 1.65 },
+      { brand: "TOKIO", name: "Robin Mario De Miranda De Miranda", coupons: 84, sales: 1, conv: 1.19, revenue: 2690, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "TOKIO", name: "Vanessa Andreina De Angelis (M)", coupons: 238, sales: 6, conv: 2.52, revenue: 18030, becas: 48, rebecas: 0, totalBecaCoupons: 48, becaSales: 1, becaConv: 2.08 },
+      { brand: "TOKIO", name: "Jaime Paz Fernandez (M)", coupons: 129, sales: 4, conv: 3.10, revenue: 10660, becas: 102, rebecas: 0, totalBecaCoupons: 102, becaSales: 0, becaConv: 0.0 },
+      { brand: "TOKIO", name: "Jose Pablo Otero Acevedo", coupons: 287, sales: 10, conv: 3.48, revenue: 26002, becas: 35, rebecas: 0, totalBecaCoupons: 35, becaSales: 1, becaConv: 2.86 },
+      { brand: "TOKIO", name: "Luis Enrique Perez Cordova (M)", coupons: 292, sales: 6, conv: 2.05, revenue: 16310, becas: 59, rebecas: 0, totalBecaCoupons: 59, becaSales: 0, becaConv: 0.0 },
+      { brand: "TOKIO", name: "Marcelo García Cruz", coupons: 126, sales: 3, conv: 2.38, revenue: 8470, becas: 156, rebecas: 0, totalBecaCoupons: 156, becaSales: 0, becaConv: 0.0 },
+
+      { brand: "UNISPORT", name: "Andrea Fernández España Colón", coupons: 223, sales: 5, conv: 2.24, revenue: 14400, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Brais Prieto Mexigos", coupons: 464, sales: 9, conv: 1.94, revenue: 22110, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Carlos Matías Dos Santos Mora", coupons: 401, sales: 11, conv: 2.74, revenue: 30040, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "David Dopico", coupons: 201, sales: 3, conv: 1.49, revenue: 6970, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Gabriel Antonio Donis Tato", coupons: 547, sales: 16, conv: 2.19, revenue: 41790, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Gemma Fernández Nogueira", coupons: 185, sales: 3, conv: 1.62, revenue: 8720, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Gerardo Manuel Roca Felpeto", coupons: 359, sales: 7, conv: 1.95, revenue: 18004, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "José Manuel Doldán Miras", coupons: 56, sales: 4, conv: 7.14, revenue: 12060, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Laura Costoya", coupons: 252, sales: 6, conv: 2.38, revenue: 15240, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Lorena Daranae Zuloaga Sanchez", coupons: 137, sales: 2, conv: 1.46, revenue: 4780, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Marcos Casal Bellón", coupons: 137, sales: 6, conv: 1.93, revenue: 14540, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Maria Virginia Graterol Valera", coupons: 363, sales: 2, conv: 1.02, revenue: 5830, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Rafael Mella Ferreiro", coupons: 197, sales: 6, conv: 1.96, revenue: 18040, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Robin Mario De Miranda Miranda", coupons: 306, sales: 0, conv: 0.0, revenue: -200, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Victor Guerra Vazquez", coupons: 41, sales: 7, conv: 2.21, revenue: 20080, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Yanet Gabriela Garcia Vielma", coupons: 317, sales: 5, conv: 1.61, revenue: 11600, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 },
+      { brand: "UNISPORT", name: "Yolanda González Rodríguez", coupons: 310, sales: 5, conv: 2.43, revenue: 12400, becas: 0, rebecas: 0, totalBecaCoupons: 0, becaSales: 0, becaConv: 0.0 }
+    ];
+
+    let filteredData = [...rawSalesData];
+    let currentPage = 1;
+    let pageSize = 15;
+    let topChartMetric = 'revenue';
+
+    const formatCurrency = (val) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
+    const formatNum = (val) => new Intl.NumberFormat('es-ES').format(val);
+
+    const brandColors = {
+      'FLOU': '#3b82f6',
+      '35MM': '#8b5cf6',
+      'NUBIKA': '#ec4899',
+      'CEAC': '#f97316',
+      'CAMPUS': '#06b6d4',
+      'MINT': '#10b981',
+      'CEMP': '#6366f1',
+      'TOKIO': '#ef4444',
+      'UNISPORT': '#14b8a6'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyFilters();
+    });
+
+    function switchTab(tabId) {
+      ['tab-overview', 'tab-advisors', 'tab-scholarships', 'tab-moodle'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+        const btn = document.getElementById('btn-' + id);
+        if (btn) {
+          btn.classList.remove('active');
+          btn.classList.add('text-slate-600');
         }
-      },
-      scales: {
-        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 12 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 12, weight: '500' } } }
+      });
+
+      document.getElementById(tabId).classList.remove('hidden');
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.classList.remove('text-slate-600');
       }
     }
-  });
-}
 
-function renderTable(data, metric) {
-  const tbody = document.getElementById('table-body');
-  tbody.innerHTML = '';
+    function applyFilters() {
+      const brand = document.getElementById('brandFilter').value;
+      const search = document.getElementById('searchInput').value.toLowerCase().trim();
+      const sort = document.getElementById('sortBy').value;
 
-  if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="padding: 24px; text-align: center; color: #64748b;">No se encontraron asesores con los criterios seleccionados.</td></tr>`;
-    return;
-  }
+      filteredData = rawSalesData.filter(item => {
+        const matchBrand = (brand === 'ALL') || (item.brand === brand);
+        const matchSearch = item.name.toLowerCase().includes(search);
+        return matchBrand && matchSearch;
+      });
 
-  data.forEach((item, index) => {
-    const tr = document.createElement('tr');
-    tr.style.borderBottom = '1px solid #f1f5f9';
-    if (index % 2 === 1) tr.style.backgroundColor = '#f8fafc';
+      filteredData.sort((a, b) => {
+        if (sort === 'revenue-desc') return b.revenue - a.revenue;
+        if (sort === 'sales-desc') return (b.sales + b.becaSales) - (a.sales + a.becaSales);
+        if (sort === 'conv-desc') return b.conv - a.conv;
+        if (sort === 'coupons-desc') return (b.coupons + b.totalBecaCoupons) - (a.coupons + a.totalBecaCoupons);
+        if (sort === 'name-asc') return a.name.localeCompare(b.name);
+        return 0;
+      });
 
-    const ticketMedio = item.Registros > 0 ? item.Importe / item.Registros : 0;
+      currentPage = 1;
+      updateKPIs();
+      renderBrandCharts();
+      renderTopAdvisorsChart();
+      renderTable();
+      renderBecasTab();
+    }
 
-    let rankBadge = `<span style="font-weight: 700; color: #64748b;">${index + 1}</span>`;
-    if (index === 0) rankBadge = `<span style="background: #fef08a; color: #854d0e; padding: 3px 9px; border-radius: 12px; font-weight: 800; font-size: 12px;">1º</span>`;
-    if (index === 1) rankBadge = `<span style="background: #e2e8f0; color: #334155; padding: 3px 9px; border-radius: 12px; font-weight: 800; font-size: 12px;">2º</span>`;
-    if (index === 2) rankBadge = `<span style="background: #ffedd5; color: #9a3412; padding: 3px 9px; border-radius: 12px; font-weight: 800; font-size: 12px;">3º</span>`;
+    function resetFilters() {
+      document.getElementById('brandFilter').value = 'ALL';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('sortBy').value = 'revenue-desc';
+      applyFilters();
+    }
 
-    // Render marcas Badges
-    const marcasBadges = item.Marcas.map(m => {
-      const bgColor = brandColors[m.Marca] || '#64748b';
-      return `<span style="background-color: ${bgColor}12; color: ${bgColor}; border: 1px solid ${bgColor}35; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap;">
-        ${m.Marca} (${m.Registros})
-      </span>`;
-    }).join(' ');
+    function updateKPIs() {
+      const totalRev = filteredData.reduce((acc, curr) => acc + curr.revenue, 0);
+      const totalNormSales = filteredData.reduce((acc, curr) => acc + curr.sales, 0);
+      const totalBecaSales = filteredData.reduce((acc, curr) => acc + curr.becaSales, 0);
+      const totalCouponsNorm = filteredData.reduce((acc, curr) => acc + curr.coupons, 0);
+      const totalCouponsBeca = filteredData.reduce((acc, curr) => acc + curr.totalBecaCoupons, 0);
 
-    tr.innerHTML = `
-      <td style="padding: 12px 16px; text-align: center;">${rankBadge}</td>
-      <td style="padding: 12px 16px; font-weight: 700; color: #0f172a;">${item.Asesor}</td>
-      <td style="padding: 12px 16px;"><div style="display: flex; gap: 6px; flex-wrap: wrap;">${marcasBadges}</div></td>
-      <td style="padding: 12px 16px; text-align: right; font-weight: 800; color: #2563eb;">${item.Registros}</td>
-      <td style="padding: 12px 16px; text-align: right; font-weight: 800; color: #059669;">${formatCurrency(item.Importe)}</td>
-      <td style="padding: 12px 16px; text-align: right; color: #475569; font-weight: 600;">${formatCurrency(ticketMedio)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+      const avgConv = totalCouponsNorm > 0 ? (totalNormSales / totalCouponsNorm * 100) : 0;
 
-function renderDashboard() {
-  const { data, metric } = getProcessedData();
-  updateKPIs(data);
-  renderPodium(data, metric);
-  renderChart(data, metric);
-  renderTable(data, metric);
-}
+      document.getElementById('kpi-revenue').innerText = formatCurrency(totalRev);
+      document.getElementById('kpi-sales').innerText = formatNum(totalNormSales + totalBecaSales);
+      document.getElementById('kpi-sales-breakdown').innerText = `Normales: ${formatNum(totalNormSales)} | Beca: ${formatNum(totalBecaSales)}`;
+      document.getElementById('kpi-coupons').innerText = formatNum(totalCouponsNorm + totalCouponsBeca);
+      document.getElementById('kpi-coupons-breakdown').innerText = `Normal: ${formatNum(totalCouponsNorm)} | Beca: ${formatNum(totalCouponsBeca)}`;
+      document.getElementById('kpi-conversion').innerText = avgConv.toFixed(2) + '%';
 
-// Inicializar al cargar
-document.addEventListener('DOMContentLoaded', () => {
-  renderDashboard();
-});
-</script>
+      if (filteredData.length > 0) {
+        const topByRev = [...filteredData].sort((a, b) => b.revenue - a.revenue)[0];
+        document.getElementById('kpi-top-agent').innerText = topByRev.name;
+        document.getElementById('kpi-top-metric').innerText = `${formatCurrency(topByRev.revenue)} (${topByRev.sales} ventas)`;
+      } else {
+        document.getElementById('kpi-top-agent').innerText = 'Sin datos';
+        document.getElementById('kpi-top-metric').innerText = '-';
+      }
+    }
+
+    function renderBrandCharts() {
+      const container = document.getElementById('brandRevenueChart');
+      container.innerHTML = '';
+
+      const brandStats = {};
+      filteredData.forEach(item => {
+        if (!brandStats[item.brand]) {
+          brandStats[item.brand] = { revenue: 0, sales: 0, coupons: 0, becas: 0 };
+        }
+        brandStats[item.brand].revenue += item.revenue;
+        brandStats[item.brand].sales += item.sales;
+        brandStats[item.brand].coupons += item.coupons;
+      });
+
+      const brandList = Object.keys(brandStats).map(b => ({
+        brand: b,
+        ...brandStats[b],
+        conv: brandStats[b].coupons > 0 ? (brandStats[b].sales / brandStats[b].coupons * 100) : 0
+      })).sort((a, b) => b.revenue - a.revenue);
+
+      if (brandList.length === 0) {
+        container.innerHTML = '<div class="text-sm text-slate-400 py-6 text-center">No hay registros con los filtros seleccionados</div>';
+        return;
+      }
+
+      const maxRev = Math.max(...brandList.map(b => b.revenue), 1);
+
+      brandList.forEach(b => {
+        const pct = Math.min(100, Math.round((b.revenue / maxRev) * 100));
+        const color = brandColors[b.brand] || '#3b82f6';
+
+        const row = document.createElement('div');
+        row.className = 'space-y-1';
+        row.innerHTML = `
+          <div class="flex justify-between items-center text-xs font-semibold">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${color}"></span>
+              <span class="text-slate-800">${b.brand}</span>
+              <span class="text-slate-400 font-normal">(${b.sales} vtas.)</span>
+            </div>
+            <span class="text-slate-900">${formatCurrency(b.revenue)}</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+            <div class="h-3 rounded-full transition-all duration-500" style="width: ${pct}%; background-color: ${color}"></div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      const convList = document.getElementById('brandConversionList');
+      convList.innerHTML = '';
+      const sortedByConv = [...brandList].sort((a, b) => b.conv - a.conv);
+
+      sortedByConv.slice(0, 6).forEach(b => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between text-xs py-1.5 border-b border-slate-100 last:border-0';
+        item.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full" style="background-color: ${brandColors[b.brand] || '#94a3b8'}"></span>
+            <span class="font-medium text-slate-700">${b.brand}</span>
+          </div>
+          <span class="font-bold ${b.conv >= 4 ? 'text-emerald-600' : b.conv >= 2.5 ? 'text-blue-600' : 'text-slate-500'}">
+            ${b.conv.toFixed(2)}%
+          </span>
+        `;
+        convList.appendChild(item);
+      });
+
+      if (sortedByConv.length > 0) {
+        document.getElementById('benchmark-best-brand').innerText = sortedByConv[0].brand;
+        document.getElementById('benchmark-best-rate').innerText = sortedByConv[0].conv.toFixed(2) + '%';
+      }
+    }
+
+    function setTopChartMetric(metric) {
+      topChartMetric = metric;
+      document.getElementById('btn-top-rev').className = metric === 'revenue' 
+        ? 'px-3 py-1 text-xs font-semibold rounded-lg bg-blue-600 text-white' 
+        : 'px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200';
+      document.getElementById('btn-top-sales').className = metric === 'sales' 
+        ? 'px-3 py-1 text-xs font-semibold rounded-lg bg-blue-600 text-white' 
+        : 'px-3 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200';
+      renderTopAdvisorsChart();
+    }
+
+    function renderTopAdvisorsChart() {
+      const container = document.getElementById('topAdvisorsChart');
+      container.innerHTML = '';
+
+      const topAdvisors = [...filteredData]
+        .sort((a, b) => topChartMetric === 'revenue' ? b.revenue - a.revenue : (b.sales + b.becaSales) - (a.sales + a.becaSales))
+        .slice(0, 10);
+
+      if (topAdvisors.length === 0) {
+        container.innerHTML = '<div class="text-sm text-slate-400 py-6 text-center">No hay registros</div>';
+        return;
+      }
+
+      const maxVal = Math.max(...topAdvisors.map(a => topChartMetric === 'revenue' ? a.revenue : (a.sales + a.becaSales)), 1);
+
+      topAdvisors.forEach((adv, idx) => {
+        const val = topChartMetric === 'revenue' ? adv.revenue : (adv.sales + adv.becaSales);
+        const pct = Math.min(100, Math.round((val / maxVal) * 100));
+        const color = brandColors[adv.brand] || '#3b82f6';
+        const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}.`;
+
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-3 text-xs';
+        row.innerHTML = `
+          <div class="w-6 text-center font-bold text-slate-400">${medal}</div>
+          <div class="w-48 sm:w-64 truncate font-medium text-slate-800" title="${adv.name}">${adv.name}</div>
+          <span class="px-2 py-0.5 text-[10px] font-semibold rounded-md text-white shrink-0" style="background-color: ${color}">${adv.brand}</span>
+          <div class="flex-1 bg-slate-100 rounded-full h-2.5 overflow-hidden">
+            <div class="h-2.5 rounded-full" style="width: ${pct}%; background-color: ${color}"></div>
+          </div>
+          <div class="w-24 text-right font-bold text-slate-900 shrink-0">
+            ${topChartMetric === 'revenue' ? formatCurrency(adv.revenue) : `${val} ventas`}
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('advisorsTableBody');
+      tbody.innerHTML = '';
+
+      document.getElementById('tableCount').innerText = filteredData.length;
+
+      const effectivePageSize = pageSize === 100 ? filteredData.length : pageSize;
+      const totalPages = Math.ceil(filteredData.length / effectivePageSize) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const startIndex = (currentPage - 1) * effectivePageSize;
+      const pageItems = filteredData.slice(startIndex, startIndex + effectivePageSize);
+
+      if (pageItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400">No se encontraron resultados</td></tr>`;
+      } else {
+        pageItems.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50/80 transition';
+
+          let convBadge = 'badge-gray';
+          let statusText = 'Normal';
+          if (item.conv >= 4.5) {
+            convBadge = 'badge-green';
+            statusText = 'Alto';
+          } else if (item.conv >= 2.5) {
+            convBadge = 'badge-blue';
+            statusText = 'Óptimo';
+          } else if (item.conv > 0) {
+            convBadge = 'badge-amber';
+            statusText = 'Atención';
+          }
+
+          const brandCol = brandColors[item.brand] || '#64748b';
+
+          tr.innerHTML = `
+            <td class="py-3 px-4 font-semibold">
+              <span class="px-2 py-0.5 rounded text-[11px] font-bold text-white" style="background-color: ${brandCol}">
+                ${item.brand}
+              </span>
+            </td>
+            <td class="py-3 px-4 font-medium text-slate-900">${item.name}</td>
+            <td class="py-3 px-4 text-right font-mono">${formatNum(item.coupons)}</td>
+            <td class="py-3 px-4 text-right font-bold font-mono text-slate-900">${item.sales}</td>
+            <td class="py-3 px-4 text-right font-mono">
+              <span class="px-2 py-0.5 rounded-full text-xs font-semibold ${convBadge}">
+                ${item.conv.toFixed(2)}%
+              </span>
+            </td>
+            <td class="py-3 px-4 text-right font-bold text-slate-900 font-mono">${formatCurrency(item.revenue)}</td>
+            <td class="py-3 px-4 text-right font-mono text-slate-500">${item.totalBecaCoupons > 0 ? item.totalBecaCoupons : '-'}</td>
+            <td class="py-3 px-4 text-right font-mono ${item.becaSales > 0 ? 'font-bold text-emerald-600' : 'text-slate-400'}">${item.becaSales}</td>
+            <td class="py-3 px-4 text-center">
+              <span class="text-[11px] px-2 py-0.5 rounded-md font-medium ${convBadge}">
+                ${statusText}
+              </span>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('paginationInfo').innerText = `Mostrando ${startIndex + 1} a ${Math.min(startIndex + effectivePageSize, filteredData.length)} de ${filteredData.length} asesores`;
+      renderPaginationControls(totalPages);
+    }
+
+    function renderPaginationControls(totalPages) {
+      const container = document.getElementById('paginationControls');
+      container.innerHTML = '';
+
+      if (totalPages <= 1) return;
+
+      const prevBtn = document.createElement('button');
+      prevBtn.className = `px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-medium ${currentPage === 1 ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100'}`;
+      prevBtn.innerText = '← Anterior';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => { currentPage--; renderTable(); };
+      container.appendChild(prevBtn);
+
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+          const pageBtn = document.createElement('button');
+          pageBtn.className = `w-7 h-7 rounded-lg text-xs font-semibold ${currentPage === i ? 'bg-blue-600 text-white' : 'border border-slate-200 hover:bg-slate-100'}`;
+          pageBtn.innerText = i;
+          pageBtn.onclick = () => { currentPage = i; renderTable(); };
+          container.appendChild(pageBtn);
+        }
+      }
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = `px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-medium ${currentPage === totalPages ? 'opacity-40 cursor-not-allowed' : 'hover:bg-slate-100'}`;
+      nextBtn.innerText = 'Siguiente →';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => { currentPage++; renderTable(); };
+      container.appendChild(nextBtn);
+    }
+
+    function changePageSize() {
+      pageSize = parseInt(document.getElementById('pageSize').value);
+      currentPage = 1;
+      renderTable();
+    }
+
+    function renderBecasTab() {
+      const totalBecas = filteredData.reduce((acc, curr) => acc + curr.becas, 0);
+      const totalRebecas = filteredData.reduce((acc, curr) => acc + curr.rebecas, 0);
+      const totalBecaVentas = filteredData.reduce((acc, curr) => acc + curr.becaSales, 0);
+
+      document.getElementById('becas-total-becas').innerText = formatNum(totalBecas);
+      document.getElementById('becas-total-rebecas').innerText = formatNum(totalRebecas);
+      document.getElementById('becas-total-ventas').innerText = formatNum(totalBecaVentas);
+
+      const becasByBrand = {};
+      filteredData.forEach(item => {
+        if (!becasByBrand[item.brand]) becasByBrand[item.brand] = 0;
+        becasByBrand[item.brand] += item.totalBecaCoupons;
+      });
+
+      const bContainer = document.getElementById('becasBrandChart');
+      bContainer.innerHTML = '';
+      const maxBeca = Math.max(...Object.values(becasByBrand), 1);
+
+      Object.keys(becasByBrand).sort((a,b) => becasByBrand[b] - becasByBrand[a]).forEach(b => {
+        const total = becasByBrand[b];
+        if (total === 0) return;
+        const pct = Math.round((total / maxBeca) * 100);
+        const row = document.createElement('div');
+        row.className = 'space-y-1 text-xs';
+        row.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span class="font-medium text-slate-700">${b}</span>
+            <span class="font-bold text-slate-900">${formatNum(total)} cupones</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2">
+            <div class="h-2 rounded-full bg-purple-500" style="width: ${pct}%"></div>
+          </div>
+        `;
+        bContainer.appendChild(row);
+      });
+
+      const topBecaBody = document.getElementById('topBecaTableBody');
+      topBecaBody.innerHTML = '';
+      const topBecaAdv = [...filteredData]
+        .filter(a => a.totalBecaCoupons > 0 || a.becaSales > 0)
+        .sort((a, b) => b.becaSales - a.becaSales || b.totalBecaCoupons - a.totalBecaCoupons)
+        .slice(0, 8);
+
+      topBecaAdv.forEach(adv => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-medium text-slate-800">${adv.name}</td>
+          <td class="py-2.5 px-3"><span class="px-1.5 py-0.5 text-[10px] rounded text-white" style="background-color: ${brandColors[adv.brand] || '#64748b'}">${adv.brand}</span></td>
+          <td class="py-2.5 px-3 text-right font-mono">${adv.totalBecaCoupons}</td>
+          <td class="py-2.5 px-3 text-right font-mono font-bold ${adv.becaSales > 0 ? 'text-emerald-600' : 'text-slate-400'}">${adv.becaSales}</td>
+          <td class="py-2.5 px-3 text-right font-mono font-semibold">${adv.becaConv.toFixed(2)}%</td>
+        `;
+        topBecaBody.appendChild(tr);
+      });
+    }
+
+    function copySnippet(id) {
+      const el = document.getElementById(id);
+      el.select();
+      document.execCommand('copy');
+      alert('¡Código de incrustación para Moodle copiado al portapapeles!');
+    }
+
+    function downloadHTML() {
+      const htmlContent = document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'dashboard_moodle_comercial.html';
+      link.click();
+    }
+
+    function exportToCSV() {
+      let csv = 'Marca;Asesor;Cupones Normal;Ventas Normal;Conversion Normal;Facturacion (€);Becas;Rebecas;Total Cupon Beca;Ventas Beca;Conversion Beca\n';
+      filteredData.forEach(i => {
+        csv += `"${i.brand}";"${i.name}";${i.coupons};${i.sales};"${i.conv.toFixed(2)}%";"${i.revenue.toFixed(2)}";${i.becas};${i.rebecas};${i.totalBecaCoupons};${i.becaSales};"${i.becaConv.toFixed(2)}%"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `metricas_comerciales_moodle_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+  </script>
+</body>
+</html>
