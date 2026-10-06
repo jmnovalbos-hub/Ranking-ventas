@@ -1,420 +1,295 @@
-<!-- DASHBOARD RANKING ASESORES - MODO CLARO - MOODLE READY -->
-<div id="moodle-ranking-dashboard" style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #0f172a; padding: 24px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01); max-width: 1200px; margin: 0 auto;">
-  
-  <!-- Carga CDN Chart.js para gráficos -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div id="cdash">
+<style>
+#cdash{--ink:#1C2333;--muted:#5E6878;--line:#DCE1E8;--surface:#F4F6F9;--paper:#FFFFFF;--accent:#1E5AA8;--good:#1B7F55;--warn:#B8740F;--bad:#B9382A;
+ font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--paper);line-height:1.45;max-width:1200px;margin:0 auto;padding:8px 4px 32px;font-size:15px;box-sizing:border-box}
+#cdash *,#cdash *::before,#cdash *::after{box-sizing:border-box}
+#cdash h2,#cdash h3,#cdash p{margin:0}
+#cdash .num{font-variant-numeric:tabular-nums}
+#cdash .hero{padding:20px 0 24px;border-bottom:1px solid var(--line)}
+#cdash .hero h2{font-size:clamp(24px,3.4vw,34px);font-weight:600;letter-spacing:-.01em}
+#cdash .hero .sub{color:var(--muted);margin-top:4px}
+#cdash .track{position:relative;height:18px;background:var(--surface);border-radius:3px;margin:20px 0 8px;overflow:visible}
+#cdash .track .fill{position:absolute;inset:0 auto 0 0;border-radius:3px}
+#cdash .track .mark{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--ink)}
+#cdash .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px 24px;margin-top:20px}
+#cdash .kpi b{display:block;font-size:22px;font-weight:600}
+#cdash .kpi span{color:var(--muted);font-size:13px}
+#cdash section{margin-top:32px}
+#cdash section>h3{font-size:19px;font-weight:600;margin-bottom:4px}
+#cdash section>p.hint{color:var(--muted);font-size:13px;margin-bottom:14px}
+#cdash .camps{display:grid;gap:2px}
+#cdash .camp{display:grid;grid-template-columns:110px 1fr 70px 190px;align-items:center;gap:14px;padding:9px 10px;border-radius:4px;cursor:pointer;border:1px solid transparent;background:none;font:inherit;color:inherit;text-align:left;width:100%}
+#cdash .camp:hover{background:var(--surface)}
+#cdash .camp.on{border-color:var(--accent);background:#EEF3FB}
+#cdash .camp:focus-visible,#cdash button:focus-visible,#cdash input:focus-visible,#cdash th:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#cdash .camp .nm{font-weight:600}
+#cdash .camp .bar{position:relative;height:12px;background:var(--surface);border-radius:2px}
+#cdash .camp .bar i{position:absolute;inset:0 auto 0 0;border-radius:2px}
+#cdash .camp .bar .t{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+#cdash .camp .pc{font-weight:600;text-align:right}
+#cdash .camp .eu{color:var(--muted);font-size:13px;text-align:right}
+#cdash .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--muted);margin-top:10px}
+#cdash .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+#cdash .toolbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:14px}
+#cdash .seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+#cdash .seg button{border:0;background:var(--paper);padding:7px 12px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+#cdash .seg button+button{border-left:1px solid var(--line)}
+#cdash .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+#cdash select,#cdash input[type=search]{font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+#cdash input[type=search]{min-width:200px}
+#cdash label.chk{font-size:14px;color:var(--muted);display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+#cdash .sumline{font-size:14px;color:var(--muted);margin-bottom:10px}
+#cdash .sumline b{color:var(--ink)}
+#cdash .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
+#cdash .chartbox{border:1px solid var(--line);border-radius:4px;padding:12px;position:relative}
+#cdash .chartbox h4{margin:0 0 6px;font-size:14px;font-weight:600}
+#cdash svg{display:block;width:100%;height:auto}
+#cdash .tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:12px;padding:6px 8px;border-radius:3px;white-space:nowrap;opacity:0;transition:opacity .1s;z-index:5}
+#cdash .tablewrap{overflow:auto;max-height:560px;border:1px solid var(--line);border-radius:4px;margin-top:20px}
+#cdash table{border-collapse:collapse;width:100%;font-size:14px}
+#cdash th,#cdash td{padding:8px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+#cdash th:first-child,#cdash td:first-child,#cdash th:nth-child(2),#cdash td:nth-child(2){text-align:left}
+#cdash thead th{background:var(--surface);font-weight:600;font-size:13px;cursor:pointer;user-select:none;position:sticky;top:0}
+#cdash thead th[aria-sort="ascending"]::after{content:" ▲";font-size:10px}
+#cdash thead th[aria-sort="descending"]::after{content:" ▼";font-size:10px}
+#cdash tbody tr:hover{background:#F9FAFC}
+#cdash tr.apoyo td{color:var(--muted)}
+#cdash .tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:3px;background:var(--surface);color:var(--muted);margin-left:6px;vertical-align:1px}
+#cdash .cv{display:inline-flex;align-items:center;gap:8px;justify-content:flex-end}
+#cdash .cv i{display:inline-block;height:6px;border-radius:2px;width:60px;background:var(--surface);position:relative;overflow:hidden}
+#cdash .cv i u{position:absolute;inset:0 auto 0 0;background:currentColor;text-decoration:none}
+#cdash .na{color:#A3AAB6}
+#cdash .chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:1px 7px 1px 6px;border:1px solid var(--line);border-radius:10px;margin:0 4px 2px 0;color:var(--ink);background:var(--paper)}
+#cdash .chip i{width:7px;height:7px;border-radius:50%;display:inline-block}
+#cdash .chip.main{border-color:var(--ink);font-weight:600}
+#cdash tr.multi{cursor:pointer}
+#cdash .exp{display:inline-block;width:14px;color:var(--muted);font-size:11px;transition:transform .15s}
+#cdash tr.open .exp{transform:rotate(90deg)}
+#cdash tr.det td{background:var(--surface);font-size:13px;color:var(--muted);border-bottom-color:#E8EBF0}
+#cdash tr.det td:first-child{padding-left:34px}
+#cdash .badge{font-size:12px;color:var(--accent);margin-left:6px;font-weight:600}
+#cdash .note{font-size:12px;color:var(--muted);margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
+@media (max-width:760px){#cdash .grid2{grid-template-columns:1fr}#cdash .camp{grid-template-columns:80px 1fr 56px}#cdash .camp .eu{display:none}}
+@media (prefers-reduced-motion:reduce){#cdash *{transition:none!important}}
+</style>
 
-  <!-- Encabezado -->
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 2px solid #e2e8f0;">
-    <div>
-      <h2 style="margin: 0; font-size: 26px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">📊 Ranking Comercial de Asesores</h2>
-      <p style="margin: 4px 0 0 0; font-size: 14px; color: #64748b; font-weight: 500;">Rendimiento comercial y métricas de matriculación multimarca</p>
-    </div>
-    <div style="font-size: 12px; background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 20px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
-      <span style="width: 8px; height: 8px; background-color: #2563eb; border-radius: 50%;"></span>
-      Actualizado: 29/09/2026
-    </div>
-  </div>
-
-  <!-- Métricas Generales (KPIs) -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
-    <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #2563eb; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Facturación Total</span>
-      <div id="kpi-facturacion" style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px;">1.532.916,13 €</div>
-    </div>
-    <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #059669; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Total Matrículas</span>
-      <div id="kpi-ventas" style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px;">631</div>
-    </div>
-    <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #d97706; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Asesores Visibles</span>
-      <div id="kpi-asesores" style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px;">81</div>
-    </div>
-    <div style="background: #ffffff; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0; border-left: 5px solid #7c3aed; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-      <span style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Ticket Medio / Venta</span>
-      <div id="kpi-ticket" style="font-size: 24px; font-weight: 800; color: #0f172a; margin-top: 6px;">2.429,34 €</div>
-    </div>
-  </div>
-
-  <!-- Barra de Filtros, Búsqueda y Marca -->
-  <div style="background: #ffffff; padding: 16px 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-    
-    <!-- Botones Top Filter -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 700; color: #475569; margin-right: 2px;">Vista:</span>
-      <button class="filter-btn" onclick="setTopFilter(3)" id="btn-top3" style="padding: 7px 13px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; color: #334155; transition: all 0.2s;">Top 3</button>
-      <button class="filter-btn" onclick="setTopFilter(5)" id="btn-top5" style="padding: 7px 13px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; color: #334155; transition: all 0.2s;">Top 5</button>
-      <button class="filter-btn" onclick="setTopFilter(10)" id="btn-top10" style="padding: 7px 13px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; color: #334155; transition: all 0.2s;">Top 10</button>
-      <button class="filter-btn active" onclick="setTopFilter(0)" id="btn-top0" style="padding: 7px 13px; border: 1px solid #2563eb; background: #2563eb; color: #ffffff; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all 0.2s;">Todos</button>
-    </div>
-
-    <!-- Filtro por Marca -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 700; color: #475569;">Marca:</span>
-      <select id="brandFilter" onchange="renderDashboard()" style="padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 600; background-color: #ffffff; color: #0f172a; cursor: pointer; outline: none;">
-        <option value="TODAS">Todas las Marcas</option>
-        <option value="CEAC FP Oficial">CEAC FP Oficial</option>
-        <option value="Campus">Campus</option>
-        <option value="CEMP">CEMP</option>
-        <option value="Unisport">Unisport</option>
-        <option value="35mm">35mm</option>
-        <option value="Nubika">Nubika</option>
-        <option value="Tokio">Tokio</option>
-        <option value="Flou">Flou</option>
-        <option value="Mint">Mint</option>
-      </select>
-    </div>
-
-    <!-- Buscador -->
-    <div style="position: relative; flex-grow: 1; max-width: 260px;">
-      <input type="text" id="searchInput" onkeyup="filterData()" placeholder="🔍 Buscar asesor..." style="width: 100%; padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; background-color: #ffffff; color: #0f172a; box-sizing: border-box;">
-    </div>
-
-    <!-- Ordenación -->
-    <div style="display: flex; align-items: center; gap: 6px;">
-      <span style="font-size: 13px; font-weight: 700; color: #475569;">Ordenar:</span>
-      <select id="sortMetric" onchange="renderDashboard()" style="padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 600; background-color: #ffffff; color: #0f172a; cursor: pointer; outline: none;">
-        <option value="Registros">Matrículas</option>
-        <option value="Importe">Facturación (€)</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Podio Top 3 Visual -->
-  <div id="podium-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px;"></div>
-
-  <!-- Sección de Gráficos -->
-  <div style="background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 700; color: #0f172a;">📈 Comparativa de Rendimiento</h3>
-    <div style="position: relative; height: 300px; width: 100%;">
-      <canvas id="rankingChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Tabla de Posiciones -->
-  <div style="background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.03); overflow-x: auto;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-      <thead>
-        <tr style="background-color: #f1f5f9; border-bottom: 2px solid #e2e8f0; color: #475569; font-weight: 700;">
-          <th style="padding: 14px 16px; width: 50px; text-align: center;">#</th>
-          <th style="padding: 14px 16px;">Asesor</th>
-          <th style="padding: 14px 16px;">Distribución por Marca</th>
-          <th style="padding: 14px 16px; text-align: right;">Matrículas</th>
-          <th style="padding: 14px 16px; text-align: right;">Facturación Total</th>
-          <th style="padding: 14px 16px; text-align: right;">Ticket Medio</th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-        <!-- Relleno dinámico -->
-      </tbody>
-    </table>
-  </div>
+<div class="hero">
+  <h2 id="cd-title">Cierre de septiembre 2026</h2>
+  <p class="sub" id="cd-sub"></p>
+  <div class="track" aria-hidden="true"><div class="fill" id="cd-fill"></div><div class="mark" style="left:calc(100% / 1.3)"></div></div>
+  <div class="kpis" id="cd-kpis"></div>
 </div>
 
+<section>
+  <h3>Objetivos por campaña</h3>
+  <p class="hint">Facturación frente al objetivo oficial. La línea vertical marca el 100 %. Pulsa una campaña para filtrar el detalle de agentes.</p>
+  <div class="camps" id="cd-camps"></div>
+  <div class="legend"><span style="--c:var(--good)">Objetivo cumplido</span><span style="--c:var(--warn)">85–99 %</span><span style="--c:var(--bad)">Menos del 85 %</span></div>
+</section>
+
+<section>
+  <h3>Rendimiento por agente</h3>
+  <p class="hint">Con «Todas las campañas» cada comercial aparece una sola vez, con la suma de todas las marcas en las que vende; pulsa su fila para ver el desglose. Al elegir una campaña concreta se muestran solo las cifras de esa campaña.</p>
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="Tipo de cupón">
+      <button type="button" data-mode="normal" aria-pressed="true">Cupón normal</button>
+      <button type="button" data-mode="beca" aria-pressed="false">Cupón beca / rebeca</button>
+    </div>
+    <select id="cd-camp" aria-label="Campaña"></select>
+    <input type="search" id="cd-q" placeholder="Buscar agente" aria-label="Buscar agente">
+  </div>
+  <p class="sumline" id="cd-sum"></p>
+  <div class="grid2">
+    <div class="chartbox"><h4 id="cd-sc-title">Cupones y ventas</h4><div id="cd-scatter"></div><div class="tip" id="cd-tip"></div></div>
+    <div class="chartbox"><h4 id="cd-rk-title">Ranking</h4><div id="cd-rank"></div></div>
+  </div>
+  <div class="tablewrap"><table><thead id="cd-thead"></thead><tbody id="cd-tbody"></tbody></table></div>
+</section>
+
+<p class="note">Conversión = ventas ÷ cupones, recalculada para todos los agentes. Los comerciales se unifican por nombre (sin tener en cuenta tildes, mayúsculas, «(M)» ni partículas como «de»). Su campaña principal, en negrita, es aquella en la que reciben más cupones; en la vista por campaña, la etiqueta <span class="tag">apoyo</span> indica que esa no es su campaña principal. Cuando el Excel tenía errores (#DIV/0!, #REF!) o no aplica (NA), se muestra «—». La facturación por campaña procede del resumen de objetivos del Excel e incluye conceptos que no aparecen en el detalle por agente.</p>
+
 <script>
-// Dataset depurado extraído de 'ranking2909_1.xlsx'
-const rawDataWithBrands = [
-  {"Asesor": "Beatriz Fernandez-España Barral", "Importe": 26380.0, "Registros": 12, "Marcas": [{"Marca": "Flou", "Importe": 26380.0, "Registros": 12}]},
-  {"Asesor": "Javier Deus Garcia", "Importe": 19210.0, "Registros": 7, "Marcas": [{"Marca": "Flou", "Importe": 19210.0, "Registros": 7}]},
-  {"Asesor": "Jose Vicente Martínez", "Importe": 33640.0, "Registros": 16, "Marcas": [{"Marca": "Flou", "Importe": 33640.0, "Registros": 16}]},
-  {"Asesor": "María Luz Vidal Cardalda", "Importe": 17834.0, "Registros": 9, "Marcas": [{"Marca": "Flou", "Importe": 17834.0, "Registros": 9}]},
-  {"Asesor": "Nuria Mariño Alonso", "Importe": 29560.0, "Registros": 12, "Marcas": [{"Marca": "Flou", "Importe": 29560.0, "Registros": 12}]},
-  {"Asesor": "Rocio Gerpe Barreiros", "Importe": 41100.0, "Registros": 20, "Marcas": [{"Marca": "Flou", "Importe": 41100.0, "Registros": 20}]},
-  {"Asesor": "Helen Rachell Aviles Bárcenas", "Importe": 7760.0, "Registros": 3, "Marcas": [{"Marca": "Flou", "Importe": 7760.0, "Registros": 3}]},
-  {"Asesor": "Maria Alejandra Fernandez Gonzalez", "Importe": 1776.0, "Registros": 1, "Marcas": [{"Marca": "Flou", "Importe": 1776.0, "Registros": 1}]},
-  {"Asesor": "Alvaro Tineo Meza", "Importe": 35985.0, "Registros": 15, "Marcas": [{"Marca": "35mm", "Importe": 35985.0, "Registros": 15}]},
-  {"Asesor": "Ana Cristina Sousa Díaz", "Importe": 19740.0, "Registros": 6, "Marcas": [{"Marca": "35mm", "Importe": 19740.0, "Registros": 6}]},
-  {"Asesor": "Laura Varela Allo", "Importe": 23380.0, "Registros": 10, "Marcas": [{"Marca": "35mm", "Importe": 23380.0, "Registros": 10}]},
-  {"Asesor": "Rocio Perez Lopez", "Importe": 0.0, "Registros": 0, "Marcas": [{"Marca": "35mm", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Santiago Concheiro Álvarez", "Importe": 18318.0, "Registros": 6, "Marcas": [{"Marca": "35mm", "Importe": 18318.0, "Registros": 6}]},
-  {"Asesor": "Esperanza Ruiz San Martín", "Importe": 32740.0, "Registros": 13, "Marcas": [{"Marca": "35mm", "Importe": 32740.0, "Registros": 13}]},
-  {"Asesor": "Irene Blanco Rodriguez", "Importe": 1862.0, "Registros": 1, "Marcas": [{"Marca": "35mm", "Importe": 1862.0, "Registros": 1}]},
-  {"Asesor": "Valeria Ledo Gonzalo", "Importe": 10494.0, "Registros": 5, "Marcas": [{"Marca": "35mm", "Importe": 10494.0, "Registros": 5}]},
-  {"Asesor": "Estefania Iglesias Delgado", "Importe": 14190.0, "Registros": 6, "Marcas": [{"Marca": "Nubika", "Importe": 14190.0, "Registros": 6}]},
-  {"Asesor": "Ileana Waisman Martinez", "Importe": 10632.0, "Registros": 5, "Marcas": [{"Marca": "Nubika", "Importe": 10632.0, "Registros": 5}]},
-  {"Asesor": "Maria Cruz Baltodano Chavarria", "Importe": 35284.0, "Registros": 16, "Marcas": [{"Marca": "Nubika", "Importe": 35284.0, "Registros": 16}]},
-  {"Asesor": "Oscar Vilar Lombardero", "Importe": 42466.0, "Registros": 19, "Marcas": [{"Marca": "Nubika", "Importe": 42466.0, "Registros": 19}]},
-  {"Asesor": "Beatriz Queiruga Penedo", "Importe": 40769.0, "Registros": 18, "Marcas": [{"Marca": "Nubika", "Importe": 40769.0, "Registros": 18}]},
-  {"Asesor": "Gloria María Compaire Izuel", "Importe": 24618.05, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 24618.05, "Registros": 14}]},
-  {"Asesor": "Jayone Garijo Ruiz", "Importe": 50615.0, "Registros": 24, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 41755.0, "Registros": 20}, {"Marca": "Campus", "Importe": 8860.0, "Registros": 4}]},
-  {"Asesor": "Leticia María Argüelles Blanco", "Importe": 28651.97, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 19691.97, "Registros": 10}, {"Marca": "Campus", "Importe": 8960.0, "Registros": 4}]},
-  {"Asesor": "Lillian LLanos LLanos", "Importe": 31679.74, "Registros": 14, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 31679.74, "Registros": 14}, {"Marca": "Campus", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Lucia Perez Rodriguez", "Importe": 14372.26, "Registros": 9, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 12282.26, "Registros": 8}, {"Marca": "Campus", "Importe": 2090.0, "Registros": 1}]},
-  {"Asesor": "Manuel Jesus Aguilar Luque", "Importe": 43730.71, "Registros": 23, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 30490.71, "Registros": 17}, {"Marca": "Campus", "Importe": 13240.0, "Registros": 6}]},
-  {"Asesor": "Maria Lourdes Manzano Fernandez", "Importe": 11322.5, "Registros": 6, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 9376.5, "Registros": 5}, {"Marca": "Campus", "Importe": 1946.0, "Registros": 1}]},
-  {"Asesor": "Isabel Abalo de Dios", "Importe": 39332.52, "Registros": 22, "Marcas": [{"Marca": "CEAC FP Oficial", "Importe": 37142.52, "Registros": 21}, {"Marca": "Campus", "Importe": 2190.0, "Registros": 1}]},
-  {"Asesor": "Ana Blanco González", "Importe": 30546.0, "Registros": 14, "Marcas": [{"Marca": "Campus", "Importe": 30546.0, "Registros": 14}]},
-  {"Asesor": "Ana María Fuentes Fuentes", "Importe": 19482.0, "Registros": 10, "Marcas": [{"Marca": "Campus", "Importe": 19482.0, "Registros": 10}]},
-  {"Asesor": "Ana Yolanda Otero Revenga", "Importe": 22338.0, "Registros": 11, "Marcas": [{"Marca": "Campus", "Importe": 22338.0, "Registros": 11}]},
-  {"Asesor": "Lorena Angeriz Lopez", "Importe": 6042.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 6042.0, "Registros": 3}]},
-  {"Asesor": "Margarita Garcia Iglesias", "Importe": 18324.0, "Registros": 9, "Marcas": [{"Marca": "Campus", "Importe": 18324.0, "Registros": 9}, {"Marca": "Mint", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Maria Lourdes Alonso Nuñez", "Importe": 17320.0, "Registros": 8, "Marcas": [{"Marca": "Campus", "Importe": 17320.0, "Registros": 8}, {"Marca": "Mint", "Importe": 0.0, "Registros": 0}]},
-  {"Asesor": "Rocio Ponte", "Importe": 2090.0, "Registros": 1, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 1}]},
-  {"Asesor": "Sofia Ines Garcia Saavedra", "Importe": 2090.0, "Registros": 10, "Marcas": [{"Marca": "Campus", "Importe": 2090.0, "Registros": 10}]},
-  {"Asesor": "Tatiana Andres Docal", "Importe": 21172.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 21172.0, "Registros": 3}]},
-  {"Asesor": "Alejandro Garcia Delgado", "Importe": 6156.0, "Registros": 7, "Marcas": [{"Marca": "Campus", "Importe": 6156.0, "Registros": 7}]},
-  {"Asesor": "Carlos Miguez Gracia", "Importe": 19060.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 19060.0, "Registros": 3}]},
-  {"Asesor": "Gloria Maria Compaire Izuel", "Importe": 6470.0, "Registros": 3, "Marcas": [{"Marca": "Campus", "Importe": 6470.0, "Registros": 3}]},
-  {"Asesor": "Sandra Alvarez Lourido", "Importe": 12555.9, "Registros": 4, "Marcas": [{"Marca": "Mint", "Importe": 12555.9, "Registros": 4}]},
-  {"Asesor": "Fátima Fernández Martínez", "Importe": 41090.0, "Registros": 12, "Marcas": [{"Marca": "CEMP", "Importe": 41090.0, "Registros": 12}]},
-  {"Asesor": "Jacob Martinez Gonzalez", "Importe": 25730.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 25730.0, "Registros": 9}]},
-  {"Asesor": "Lourdes Quintela Fraga", "Importe": 26930.0, "Registros": 8, "Marcas": [{"Marca": "CEMP", "Importe": 26930.0, "Registros": 8}]},
-  {"Asesor": "Maria Begoña Diaz Melendez", "Importe": 43614.0, "Registros": 13, "Marcas": [{"Marca": "CEMP", "Importe": 43614.0, "Registros": 13}]},
-  {"Asesor": "Maria Jesus Prado Mosquera", "Importe": 15060.0, "Registros": 4, "Marcas": [{"Marca": "CEMP", "Importe": 15060.0, "Registros": 4}]},
-  {"Asesor": "Natalia Almudena Graña Suarez", "Importe": 21174.0, "Registros": 11, "Marcas": [{"Marca": "CEMP", "Importe": 21174.0, "Registros": 11}]},
-  {"Asesor": "Noelia Ares Patiño", "Importe": 5562.48, "Registros": 2, "Marcas": [{"Marca": "CEMP", "Importe": 5562.48, "Registros": 2}]},
-  {"Asesor": "Carmen Vazquez Ferro", "Importe": 21044.0, "Registros": 9, "Marcas": [{"Marca": "CEMP", "Importe": 21044.0, "Registros": 9}]},
-  {"Asesor": "Lorena Lago Piñeiro", "Importe": 3890.0, "Registros": 1, "Marcas": [{"Marca": "CEMP", "Importe": 3890.0, "Registros": 1}]},
-  {"Asesor": "Maria Lopez Regueira", "Importe": 20270.0, "Registros": 6, "Marcas": [{"Marca": "CEMP", "Importe": 20270.0, "Registros": 6}]},
-  {"Asesor": "Mónica Orjales Ormaechea", "Importe": 14972.0, "Registros": 7, "Marcas": [{"Marca": "CEMP", "Importe": 14972.0, "Registros": 7}]},
-  {"Asesor": "Antonio Javier Eijo Cal", "Importe": 7172.0, "Registros": 3, "Marcas": [{"Marca": "Tokio", "Importe": 7172.0, "Registros": 3}]},
-  {"Asesor": "Diego Felipe De Araujo", "Importe": 17475.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 17475.0, "Registros": 6}]},
-  {"Asesor": "Ivan Dopico Rodriguez", "Importe": 10282.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10282.0, "Registros": 4}]},
-  {"Asesor": "Lucía Ugarte Brandariz", "Importe": 13054.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 13054.0, "Registros": 6}]},
-  {"Asesor": "Miguel Ángel Villarroel Valenzuela", "Importe": 18032.0, "Registros": 7, "Marcas": [{"Marca": "Tokio", "Importe": 18032.0, "Registros": 7}]},
-  {"Asesor": "Robin Mario De Miranda De Miranda", "Importe": 2690.0, "Registros": 1, "Marcas": [{"Marca": "Tokio", "Importe": 2690.0, "Registros": 1}]},
-  {"Asesor": "Vanessa Andreina De Angelis", "Importe": 18030.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 18030.0, "Registros": 6}]},
-  {"Asesor": "Jaime Paz Fernandez", "Importe": 10660.0, "Registros": 4, "Marcas": [{"Marca": "Tokio", "Importe": 10660.0, "Registros": 4}]},
-  {"Asesor": "Jose Pablo Otero Acevedo", "Importe": 26002.0, "Registros": 10, "Marcas": [{"Marca": "Tokio", "Importe": 26002.0, "Registros": 10}]},
-  {"Asesor": "Luis Enrique Perez Cordova", "Importe": 16310.0, "Registros": 6, "Marcas": [{"Marca": "Tokio", "Importe": 16310.0, "Registros": 6}]},
-  {"Asesor": "Marcelo García Cruz", "Importe": 8470.0, "Registros": 3, "Marcas": [{"Marca": "Tokio", "Importe": 8470.0, "Registros": 3}]},
-  {"Asesor": "Andrea Fernández España Colón", "Importe": 14400.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 14400.0, "Registros": 5}]},
-  {"Asesor": "Brais Prieto Mexigos", "Importe": 22110.0, "Registros": 9, "Marcas": [{"Marca": "Unisport", "Importe": 22110.0, "Registros": 9}]},
-  {"Asesor": "Carlos Matías Dos Santos Mora", "Importe": 30040.0, "Registros": 11, "Marcas": [{"Marca": "Unisport", "Importe": 30040.0, "Registros": 11}]},
-  {"Asesor": "David Dopico", "Importe": 6970.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 6970.0, "Registros": 3}]},
-  {"Asesor": "Gabriel Antonio Donis Tato", "Importe": 41790.0, "Registros": 16, "Marcas": [{"Marca": "Unisport", "Importe": 41790.0, "Registros": 16}]},
-  {"Asesor": "Gemma Fernández Nogueira", "Importe": 8720.0, "Registros": 3, "Marcas": [{"Marca": "Unisport", "Importe": 8720.0, "Registros": 3}]},
-  {"Asesor": "Gerardo Manuel Roca Felpeto", "Importe": 18004.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 18004.0, "Registros": 7}]},
-  {"Asesor": "José Manuel Doldán Miras", "Importe": 12060.0, "Registros": 4, "Marcas": [{"Marca": "Unisport", "Importe": 12060.0, "Registros": 4}]},
-  {"Asesor": "Laura Costoya", "Importe": 15240.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 15240.0, "Registros": 6}]},
-  {"Asesor": "Lorena Daranae Zuloaga Sanchez", "Importe": 4780.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 4780.0, "Registros": 2}]},
-  {"Asesor": "Marcos Casal Bellón", "Importe": 14540.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 14540.0, "Registros": 6}]},
-  {"Asesor": "Maria Virginia Graterol Valera", "Importe": 5830.0, "Registros": 2, "Marcas": [{"Marca": "Unisport", "Importe": 5830.0, "Registros": 2}]},
-  {"Asesor": "Rafael Mella Ferreiro", "Importe": 18040.0, "Registros": 6, "Marcas": [{"Marca": "Unisport", "Importe": 18040.0, "Registros": 6}]},
-  {"Asesor": "Robin Mario De Miranda Miranda", "Importe": -200.0, "Registros": 0, "Marcas": [{"Marca": "Unisport", "Importe": -200.0, "Registros": 0}]},
-  {"Asesor": "Victor Guerra Vazquez", "Importe": 20080.0, "Registros": 7, "Marcas": [{"Marca": "Unisport", "Importe": 20080.0, "Registros": 7}]},
-  {"Asesor": "Yanet Gabriela Garcia Vielma", "Importe": 11600.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 11600.0, "Registros": 5}]},
-  {"Asesor": "Yolanda González Rodríguez", "Importe": 12400.0, "Registros": 5, "Marcas": [{"Marca": "Unisport", "Importe": 12400.0, "Registros": 5}]}
-];
+(function(){
+var D={"campanas": [{"nombre": "FLOU", "plantilla": 7, "agentes": [{"nombre": "Beatriz Fernandez-España Barral", "cupones": 322, "ventas": 15, "eur": 32022, "becas": 157, "rebecas": 72, "total_beca": 229, "ventas_beca": 1, "apoyo": false}, {"nombre": "Javier Deus Garcia", "cupones": 275, "ventas": 7, "eur": 20732, "becas": 147, "rebecas": 167, "total_beca": 314, "ventas_beca": -1, "apoyo": false}, {"nombre": "Jose Vicente Martínez", "cupones": 427, "ventas": 17, "eur": 35830, "becas": 196, "rebecas": 165, "total_beca": 361, "ventas_beca": 0, "apoyo": false}, {"nombre": "María Luz Vidal Cardalda", "cupones": 240, "ventas": 11, "eur": 23386, "becas": 150, "rebecas": 86, "total_beca": 236, "ventas_beca": 2, "apoyo": false}, {"nombre": "Nuria Mariño Alonso", "cupones": 312, "ventas": 12, "eur": 31750, "becas": 94, "rebecas": 56, "total_beca": 150, "ventas_beca": 0, "apoyo": false}, {"nombre": "Rocio Gerpe Barreiros", "cupones": 385, "ventas": 24, "eur": 48790, "becas": 150, "rebecas": 120, "total_beca": 270, "ventas_beca": 1, "apoyo": false}, {"nombre": "Helen Rachell Aviles Bárcenas", "cupones": 175, "ventas": 5, "eur": 12140, "becas": 133, "rebecas": 129, "total_beca": 262, "ventas_beca": 0, "apoyo": false}, {"nombre": "Maria Alejandra Fernandez Gonzalez", "cupones": 65, "ventas": 1, "eur": 1776, "becas": 119, "rebecas": 44, "total_beca": 163, "ventas_beca": 1, "apoyo": false}], "promedio_cupon": 305.14285714285717}, {"nombre": "35MM", "plantilla": 6, "agentes": [{"nombre": "Alvaro Tineo Meza", "cupones": 404, "ventas": 17, "eur": 40175, "becas": 1, "rebecas": 0, "total_beca": 1, "ventas_beca": 0, "apoyo": false}, {"nombre": "Ana Cristina Sousa Díaz", "cupones": 163, "ventas": 8, "eur": 24726.5, "becas": 130, "rebecas": 20, "total_beca": 150, "ventas_beca": 0, "apoyo": false}, {"nombre": "Laura Varela Allo", "cupones": 375, "ventas": 12, "eur": 28356, "becas": 100, "rebecas": 0, "total_beca": 100, "ventas_beca": 2, "apoyo": false}, {"nombre": "Rocio Perez Lopez", "cupones": 69, "ventas": 0, "eur": 0, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Santiago Concheiro Álvarez", "cupones": 305, "ventas": 8, "eur": 23852, "becas": 34, "rebecas": 10, "total_beca": 44, "ventas_beca": 0, "apoyo": false}, {"nombre": "Esperanza Ruiz San Martín", "cupones": 338, "ventas": 14, "eur": 35930, "becas": 100, "rebecas": 0, "total_beca": 100, "ventas_beca": 0, "apoyo": false}, {"nombre": "Irene Blanco Rodriguez", "cupones": 79, "ventas": 2, "eur": 3654, "becas": 238, "rebecas": 165, "total_beca": 403, "ventas_beca": 2, "apoyo": false}, {"nombre": "Valeria Ledo Gonzalo", "cupones": 178, "ventas": 10, "eur": 22430.4, "becas": 230, "rebecas": 0, "total_beca": 230, "ventas_beca": 3, "apoyo": false}, {"nombre": "Gloria Maria Compaire Izuel", "cupones": 0, "ventas": 1, "eur": 2190, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": true}, {"nombre": "Carlos Miguez Gracia", "cupones": 0, "ventas": 1, "eur": 2190, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": true}, {"nombre": "David Dopico", "cupones": 0, "ventas": 1, "eur": 2190, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": true}], "promedio_cupon": 275.6666666666667}, {"nombre": "NUBIKA", "plantilla": 5, "agentes": [{"nombre": "Estefania Iglesias Delgado", "cupones": 281, "ventas": 10, "eur": 23942, "becas": 178, "rebecas": 85, "total_beca": 263, "ventas_beca": 0, "apoyo": false}, {"nombre": "Ileana Waisman Martinez", "cupones": 221, "ventas": 8, "eur": 16546, "becas": 109, "rebecas": 20, "total_beca": 129, "ventas_beca": 2, "apoyo": false}, {"nombre": "Maria Cruz Baltodano Chavarria", "cupones": 455, "ventas": 20, "eur": 43815, "becas": 152, "rebecas": 0, "total_beca": 152, "ventas_beca": 3, "apoyo": false}, {"nombre": "Oscar Vilar Lombardero", "cupones": 415, "ventas": 24, "eur": 51954, "becas": 27, "rebecas": 0, "total_beca": 27, "ventas_beca": 2, "apoyo": false}, {"nombre": "Beatriz Queiruga Penedo", "cupones": 362, "ventas": 22, "eur": 50879, "becas": 37, "rebecas": 35, "total_beca": 72, "ventas_beca": 1, "apoyo": false}], "promedio_cupon": 346.8}, {"nombre": "CEAC", "plantilla": 8, "agentes": [{"nombre": "Gloria Maria Compaire Izuel", "cupones": 401, "ventas": 19, "eur": 29066.05, "becas": 161, "rebecas": 0, "total_beca": 161, "ventas_beca": 2, "apoyo": false}, {"nombre": "Jayone Garijo Ruiz", "cupones": 470, "ventas": 24, "eur": 48048, "becas": 143, "rebecas": 0, "total_beca": 143, "ventas_beca": 2, "apoyo": false}, {"nombre": "Leticia María Argüelles Blanco", "cupones": 252, "ventas": 12, "eur": 22557.425, "becas": 248, "rebecas": 0, "total_beca": 248, "ventas_beca": 0, "apoyo": false}, {"nombre": "Lillian LLanos LLanos", "cupones": 394, "ventas": 20, "eur": 41906.33, "becas": 50, "rebecas": 0, "total_beca": 50, "ventas_beca": 0, "apoyo": false}, {"nombre": "Lucia Perez Rodriguez", "cupones": 223, "ventas": 13, "eur": 20149.4, "becas": 168, "rebecas": 0, "total_beca": 168, "ventas_beca": 1, "apoyo": false}, {"nombre": "Manuel Jesus Aguilar Luque", "cupones": 449, "ventas": 22, "eur": 39476.71, "becas": 75, "rebecas": 0, "total_beca": 75, "ventas_beca": 0, "apoyo": false}, {"nombre": "Maria Lourdes Manzano Fernandez", "cupones": 207, "ventas": 8, "eur": 14225.75, "becas": 250, "rebecas": 0, "total_beca": 250, "ventas_beca": 2, "apoyo": false}, {"nombre": "Isabel Abalo de Dios", "cupones": 466, "ventas": 24, "eur": 43799.41499999999, "becas": 40, "rebecas": 0, "total_beca": 40, "ventas_beca": 0, "apoyo": false}], "promedio_cupon": 357.75}, {"nombre": "CAMPUS", "plantilla": 11, "agentes": [{"nombre": "Ana Blanco González (M)", "cupones": 510, "ventas": 15, "eur": 32836, "becas": 25, "rebecas": 25, "total_beca": 50, "ventas_beca": 1, "apoyo": false}, {"nombre": "Ana María Fuentes Fuentes (M)", "cupones": 294, "ventas": 11, "eur": 21428, "becas": 360, "rebecas": 40, "total_beca": 400, "ventas_beca": 1, "apoyo": false}, {"nombre": "Ana Yolanda Otero Revenga", "cupones": 430, "ventas": 14, "eur": 28708, "becas": 50, "rebecas": 20, "total_beca": 70, "ventas_beca": 2, "apoyo": false}, {"nombre": "Lorena Angeriz Lopez", "cupones": 90, "ventas": 3, "eur": 6042, "becas": 316, "rebecas": 80, "total_beca": 396, "ventas_beca": 1, "apoyo": false}, {"nombre": "Margarita Garcia Iglesias (M)", "cupones": 376, "ventas": 9, "eur": 18324, "becas": 160, "rebecas": 0, "total_beca": 160, "ventas_beca": 3, "apoyo": false}, {"nombre": "Maria Lourdes Alonso Nuñez", "cupones": 400, "ventas": 12, "eur": 25980, "becas": 85, "rebecas": 0, "total_beca": 85, "ventas_beca": 0, "apoyo": false}, {"nombre": "Rocio Ponte", "cupones": 56, "ventas": 1, "eur": 2090, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Sofia Ines Garcia Saavedra (M)", "cupones": 364, "ventas": 16, "eur": 30866, "becas": 141, "rebecas": 59, "total_beca": 200, "ventas_beca": 0, "apoyo": false}, {"nombre": "Tatiana Andres Docal (M)", "cupones": 98, "ventas": 3, "eur": 6156, "becas": 247, "rebecas": 150, "total_beca": 397, "ventas_beca": 1, "apoyo": false}, {"nombre": "Alejandro Garcia Delgado", "cupones": 339, "ventas": 10, "eur": 27106, "becas": 70, "rebecas": 0, "total_beca": 70, "ventas_beca": 0, "apoyo": false}, {"nombre": "Carlos Miguez Gracia", "cupones": 146, "ventas": 4, "eur": 5414, "becas": 70, "rebecas": 0, "total_beca": 70, "ventas_beca": null, "apoyo": false}, {"nombre": "Gloria Maria Compaire Izuel", "cupones": 3, "ventas": 3, "eur": 6470, "becas": 20, "rebecas": 0, "total_beca": 20, "ventas_beca": 0, "apoyo": true}, {"nombre": "Jayone Garijo Ruiz", "cupones": 3, "ventas": 4, "eur": 11050, "becas": 20, "rebecas": 0, "total_beca": 20, "ventas_beca": 0, "apoyo": true}, {"nombre": "Leticia María Argüelles Blanco", "cupones": 0, "ventas": 5, "eur": 11250, "becas": 20, "rebecas": 0, "total_beca": 20, "ventas_beca": 0, "apoyo": true}, {"nombre": "Lillian LLanos LLanos", "cupones": 0, "ventas": 0, "eur": 0, "becas": 20, "rebecas": 0, "total_beca": 20, "ventas_beca": 0, "apoyo": true}, {"nombre": "Lucia Perez Rodriguez", "cupones": 0, "ventas": 3, "eur": 6370, "becas": 22, "rebecas": 0, "total_beca": 22, "ventas_beca": 0, "apoyo": true}, {"nombre": "Manuel Jesus Aguilar Luque", "cupones": 3, "ventas": 6, "eur": 13240, "becas": 20, "rebecas": 0, "total_beca": 20, "ventas_beca": 0, "apoyo": true}, {"nombre": "Maria Lourdes Manzano Fernandez", "cupones": 4, "ventas": 3, "eur": 5998, "becas": 60, "rebecas": 0, "total_beca": 60, "ventas_beca": 1, "apoyo": true}, {"nombre": "Isabel Abalo de Dios", "cupones": 0, "ventas": 1, "eur": 2190, "becas": 20, "rebecas": 0, "total_beca": 20, "ventas_beca": 0, "apoyo": true}], "promedio_cupon": 295.7}, {"nombre": "MINT", "plantilla": 1, "agentes": [{"nombre": "Margarita Garcia Iglesias", "cupones": 62, "ventas": 2, "eur": 4275, "becas": 9, "rebecas": 0, "total_beca": 9, "ventas_beca": 2, "apoyo": true}, {"nombre": "Maria Lourdes Alonso Nuñez", "cupones": 0, "ventas": 0, "eur": 0, "becas": 0, "rebecas": 0, "total_beca": 0, "ventas_beca": 0, "apoyo": true}, {"nombre": "Sandra Alvarez Lourido", "cupones": 354, "ventas": 4, "eur": 12555.9, "becas": 375, "rebecas": 0, "total_beca": 375, "ventas_beca": 1, "apoyo": false}], "promedio_cupon": 138.66666666666666}, {"nombre": "CEMP", "plantilla": 9, "agentes": [{"nombre": "Fátima Fernández Martínez", "cupones": 417, "ventas": 20, "eur": 74800, "becas": 0, "rebecas": 0, "total_beca": 0, "ventas_beca": 0, "apoyo": false}, {"nombre": "Jacob Martinez Gonzalez", "cupones": 344, "ventas": 13, "eur": 43442, "becas": 0, "rebecas": 0, "total_beca": 0, "ventas_beca": 0, "apoyo": false}, {"nombre": "Lourdes Quintela Fraga", "cupones": 332, "ventas": 8, "eur": 30320, "becas": 22, "rebecas": 0, "total_beca": 22, "ventas_beca": 0, "apoyo": false}, {"nombre": "Maria Begoña Diaz Melendez", "cupones": 340, "ventas": 14, "eur": 51394, "becas": 0, "rebecas": 0, "total_beca": 0, "ventas_beca": 0, "apoyo": false}, {"nombre": "Maria Jesus Prado Mosquera", "cupones": 183, "ventas": 5, "eur": 18650, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Natalia Almudena Graña Suarez", "cupones": 436, "ventas": 13, "eur": 49032, "becas": 0, "rebecas": 0, "total_beca": 0, "ventas_beca": 0, "apoyo": false}, {"nombre": "Noelia Ares Patiño", "cupones": 148, "ventas": 2, "eur": 5562.48, "becas": 15, "rebecas": 0, "total_beca": 15, "ventas_beca": 0, "apoyo": false}, {"nombre": "Carmen Vazquez Ferro", "cupones": 273, "ventas": 14, "eur": 27058, "becas": 11, "rebecas": 7, "total_beca": 18, "ventas_beca": 0, "apoyo": false}, {"nombre": "Lorena Lago Piñeiro", "cupones": 85, "ventas": 1, "eur": 3890, "becas": 20, "rebecas": 0, "total_beca": 20, "ventas_beca": 0, "apoyo": false}, {"nombre": "Maria Lopez Regueira", "cupones": 208, "ventas": 10, "eur": 30576, "becas": 24, "rebecas": 7, "total_beca": 31, "ventas_beca": 0, "apoyo": false}, {"nombre": "Mónica Orjales Ormaechea", "cupones": 228, "ventas": 7, "eur": 14972, "becas": 35, "rebecas": 7, "total_beca": 42, "ventas_beca": 1, "apoyo": false}], "promedio_cupon": 272.1818181818182}, {"nombre": "TOKIO", "plantilla": 9, "agentes": [{"nombre": "Antonio Javier Eijo Cal (M)", "cupones": 126, "ventas": 3, "eur": 7172, "becas": 76, "rebecas": 4, "total_beca": 80, "ventas_beca": 1, "apoyo": false}, {"nombre": "Diego Felipe De Araujo", "cupones": 243, "ventas": 6, "eur": 17475, "becas": 76, "rebecas": 4, "total_beca": 80, "ventas_beca": 1, "apoyo": false}, {"nombre": "Ivan Dopico Rodriguez (M)", "cupones": 204, "ventas": 5, "eur": 12772, "becas": 65, "rebecas": 0, "total_beca": 65, "ventas_beca": 0, "apoyo": false}, {"nombre": "Lucía Ugarte Brandariz", "cupones": 257, "ventas": 6, "eur": 16644, "becas": 128, "rebecas": 0, "total_beca": 128, "ventas_beca": 1, "apoyo": false}, {"nombre": "Miguel Ángel Villarroel Valenzuela", "cupones": 374, "ventas": 10, "eur": 23212, "becas": 172, "rebecas": 0, "total_beca": 172, "ventas_beca": 2, "apoyo": false}, {"nombre": "Robin Mario De Miranda De Miranda", "cupones": 89, "ventas": 1, "eur": 2690, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": true}, {"nombre": "Vanessa Andreina De Angelis (M)", "cupones": 296, "ventas": 7, "eur": 20890, "becas": 58, "rebecas": 0, "total_beca": 58, "ventas_beca": 1, "apoyo": false}, {"nombre": "Jaime Paz Fernandez (M)", "cupones": 172, "ventas": 9, "eur": 22156, "becas": 122, "rebecas": 0, "total_beca": 122, "ventas_beca": 0, "apoyo": false}, {"nombre": "Jose Pablo Otero Acevedo", "cupones": 361, "ventas": 11, "eur": 28792, "becas": 50, "rebecas": 0, "total_beca": 50, "ventas_beca": 1, "apoyo": false}, {"nombre": "Luis Enrique Perez Cordova (M)", "cupones": 346, "ventas": 8, "eur": 21552, "becas": 87, "rebecas": 0, "total_beca": 87, "ventas_beca": 1, "apoyo": false}, {"nombre": "Marcelo García Cruz", "cupones": 131, "ventas": 4, "eur": 10462, "becas": 194, "rebecas": 0, "total_beca": 194, "ventas_beca": 1, "apoyo": false}], "promedio_cupon": 247.3}, {"nombre": "UNISPORT", "plantilla": 11, "agentes": [{"nombre": "Andrea Fernández España Colón", "cupones": 287, "ventas": 6, "eur": 16090, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Brais Prieto Mexigos", "cupones": 550, "ventas": 12, "eur": 27959, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Carlos Matías Dos Santos Mora", "cupones": 493, "ventas": 12, "eur": 33092, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "David Dopico", "cupones": 237, "ventas": 4, "eur": 8660, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Gabriel Antonio Donis Tato", "cupones": 666, "ventas": 19, "eur": 45770, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Gemma Fernández Nogueira", "cupones": 236, "ventas": 4, "eur": 10454, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Gerardo Manuel Roca Felpeto", "cupones": 452, "ventas": 12, "eur": 34416, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "José Manuel Doldán Miras", "cupones": 56, "ventas": 4, "eur": 12060, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Laura Costoya", "cupones": 352, "ventas": 12, "eur": 29152, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Lorena Daranae Zuloaga Sanchez", "cupones": 148, "ventas": 3, "eur": 6720, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Marcos Casal Bellón", "cupones": 148, "ventas": 10, "eur": 26950, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Maria Virginia Graterol Valera", "cupones": 461, "ventas": 2, "eur": 5830, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Rafael Mella Ferreiro", "cupones": 207, "ventas": 8, "eur": 22892, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Robin Mario De Miranda Miranda", "cupones": 342, "ventas": 0, "eur": -200, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Victor Guerra Vazquez", "cupones": 41, "ventas": 8, "eur": 23216, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Yanet Gabriela Garcia Vielma", "cupones": 360, "ventas": 7, "eur": 18000, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}, {"nombre": "Yolanda González Rodríguez", "cupones": 333, "ventas": 5, "eur": 12400, "becas": null, "rebecas": null, "total_beca": null, "ventas_beca": null, "apoyo": false}], "promedio_cupon": 317.625}], "resumen": [{"campana": "Flou", "objetivo": 226979, "facturacion": 192144}, {"campana": "35MM", "objetivo": 184037, "facturacion": 224523.9}, {"campana": "Nubika", "objetivo": 184037, "facturacion": 204712}, {"campana": "Ceac", "objetivo": 302302, "facturacion": 262791.71499999997}, {"campana": "Campus", "objetivo": 214710, "facturacion": 265452}, {"campana": "Mint", "objetivo": 0, "facturacion": 14017.900000000001}, {"campana": "Cemp", "objetivo": 528333, "facturacion": 410560.48}, {"campana": "Tokio", "objetivo": 348762, "facturacion": 191461}, {"campana": "Unisport", "objetivo": 577861, "facturacion": 421895.5}, {"campana": "TOTAL", "objetivo": 2567021, "facturacion": 2187558.495}]};
+var root=document.getElementById('cdash');
+var $=function(id){return document.getElementById(id)};
+var fE=new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+var fN=new Intl.NumberFormat('es-ES',{maximumFractionDigits:0});
+var fP=function(v,d){return v==null||!isFinite(v)?'—':(v*100).toLocaleString('es-ES',{minimumFractionDigits:d==null?1:d,maximumFractionDigits:d==null?1:d})+' %'};
+var n=function(v){return v==null?'<span class="na">—</span>':fN.format(v)};
+var COL=['#1E5AA8','#D2691E','#2A9D8F','#8E44AD','#C0392B','#7F8C8D','#B8860B','#16A085','#34495E'];
+var css=getComputedStyle(root);var C={good:'#1B7F55',warn:'#B8740F',bad:'#B9382A',ink:'#1C2333',muted:'#5E6878',line:'#DCE1E8'};
+function stat(p){return p==null?C.muted:p>=1?C.good:p>=.85?C.warn:C.bad}
 
-let currentTopFilter = 0; // 0 = Todos
-let chartInstance = null;
-
-const formatCurrency = (amount) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(amount);
-
-const brandColors = {
-  'Campus': '#2563eb',
-  'CEAC FP Oficial': '#059669',
-  'Nubika': '#d97706',
-  '35mm': '#7c3aed',
-  'CEMP': '#dc2626',
-  'Flou': '#db2777',
-  'Unisport': '#0284c7',
-  'Tokio': '#4f46e5',
-  'Mint': '#10b981'
-};
-
-function setTopFilter(count) {
-  currentTopFilter = count;
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.style.background = '#ffffff';
-    btn.style.color = '#334155';
-    btn.style.borderColor = '#cbd5e1';
-  });
-  const activeBtn = document.getElementById(`btn-top${count}`);
-  if(activeBtn) {
-    activeBtn.style.background = '#2563eb';
-    activeBtn.style.color = '#ffffff';
-    activeBtn.style.borderColor = '#2563eb';
-  }
-  renderDashboard();
-}
-
-function filterData() {
-  renderDashboard();
-}
-
-function getProcessedData() {
-  const metric = document.getElementById('sortMetric').value;
-  const selectedBrand = document.getElementById('brandFilter').value;
-  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-
-  let processed = [];
-
-  rawDataWithBrands.forEach(item => {
-    let filteredMarcas = item.Marcas;
-    if (selectedBrand !== 'TODAS') {
-      filteredMarcas = item.Marcas.filter(m => m.Marca === selectedBrand);
-    }
-
-    if (filteredMarcas.length > 0) {
-      const imp = filteredMarcas.reduce((acc, m) => acc + m.Importe, 0);
-      const reg = filteredMarcas.reduce((acc, m) => acc + m.Registros, 0);
-      
-      processed.push({
-        Asesor: item.Asesor,
-        Importe: imp,
-        Registros: reg,
-        Marcas: filteredMarcas
-      });
-    }
-  });
-
-  if (searchTerm) {
-    processed = processed.filter(item => item.Asesor.toLowerCase().includes(searchTerm));
-  }
-
-  processed.sort((a, b) => b[metric] - a[metric]);
-
-  if (currentTopFilter > 0) {
-    processed = processed.slice(0, currentTopFilter);
-  }
-
-  return { data: processed, metric, selectedBrand };
-}
-
-function updateKPIs(data) {
-  const totalFacturacion = data.reduce((acc, curr) => acc + curr.Importe, 0);
-  const totalVentas = data.reduce((acc, curr) => acc + curr.Registros, 0);
-  const totalAsesores = data.length;
-  const ticketMedio = totalVentas > 0 ? totalFacturacion / totalVentas : 0;
-
-  document.getElementById('kpi-facturacion').textContent = formatCurrency(totalFacturacion);
-  document.getElementById('kpi-ventas').textContent = totalVentas;
-  document.getElementById('kpi-asesores').textContent = totalAsesores;
-  document.getElementById('kpi-ticket').textContent = formatCurrency(ticketMedio);
-}
-
-function renderPodium(topData, metric) {
-  const container = document.getElementById('podium-container');
-  container.innerHTML = '';
-
-  if (topData.length === 0) return;
-
-  const podiumColors = [
-    { bg: '#fefce8', border: '#eab308', badge: '🥇 1º Puesto', color: '#854d0e' },
-    { bg: '#f8fafc', border: '#94a3b8', badge: '🥈 2º Puesto', color: '#334155' },
-    { bg: '#fff7ed', border: '#f97316', badge: '🥉 3º Puesto', color: '#9a3412' }
-  ];
-
-  const top3 = topData.slice(0, 3);
-  top3.forEach((item, index) => {
-    const style = podiumColors[index];
-    const card = document.createElement('div');
-    card.style.cssText = `background: ${style.bg}; border: 2px solid ${style.border}; border-radius: 12px; padding: 18px; text-align: center; font-weight: 600; color: ${style.color}; box-shadow: 0 2px 4px rgba(0,0,0,0.02);`;
-    card.innerHTML = `
-      <div style="font-size: 13px; font-weight: 800; margin-bottom: 6px; letter-spacing: 0.5px;">${style.badge}</div>
-      <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">${item.Asesor}</div>
-      <div style="font-size: 20px; font-weight: 800; color: #1e293b;">${metric === 'Importe' ? formatCurrency(item.Importe) : item.Registros + ' Matrículas'}</div>
-      <div style="font-size: 13px; color: #64748b; margin-top: 4px; font-weight: 600;">
-        ${metric === 'Importe' ? item.Registros + ' ventas' : formatCurrency(item.Importe)}
-      </div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-function renderChart(data, metric) {
-  const ctx = document.getElementById('rankingChart').getContext('2d');
-  
-  if (chartInstance) {
-    chartInstance.destroy();
-  }
-
-  const topChartData = data.slice(0, 10);
-  const labels = topChartData.map(item => item.Asesor.split(' ')[0] + ' ' + (item.Asesor.split(' ')[1] || ''));
-  const values = topChartData.map(item => item[metric]);
-
-  chartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: metric === 'Importe' ? 'Facturación Total (€)' : 'Número de Matrículas',
-        data: values,
-        backgroundColor: '#2563eb',
-        borderRadius: 8,
-        hoverBackgroundColor: '#1d4ed8'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f172a',
-          titleFont: { size: 13, weight: 'bold' },
-          bodyFont: { size: 13 },
-          padding: 10,
-          displayColors: false,
-          callbacks: {
-            label: function(context) {
-              let val = context.raw;
-              return metric === 'Importe' ? ' ' + formatCurrency(val) : ' ' + val + ' matrículas';
-            }
-          }
-        }
-      },
-      scales: {
-        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 12 } } },
-        x: { grid: { display: false }, ticks: { font: { size: 12, weight: '500' } } }
-      }
-    }
-  });
-}
-
-function renderTable(data, metric) {
-  const tbody = document.getElementById('table-body');
-  tbody.innerHTML = '';
-
-  if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="padding: 24px; text-align: center; color: #64748b;">No se encontraron asesores con los criterios seleccionados.</td></tr>`;
-    return;
-  }
-
-  data.forEach((item, index) => {
-    const tr = document.createElement('tr');
-    tr.style.borderBottom = '1px solid #f1f5f9';
-    if (index % 2 === 1) tr.style.backgroundColor = '#f8fafc';
-
-    const ticketMedio = item.Registros > 0 ? item.Importe / item.Registros : 0;
-
-    let rankBadge = `<span style="font-weight: 700; color: #64748b;">${index + 1}</span>`;
-    if (index === 0) rankBadge = `<span style="background: #fef08a; color: #854d0e; padding: 3px 9px; border-radius: 12px; font-weight: 800; font-size: 12px;">1º</span>`;
-    if (index === 1) rankBadge = `<span style="background: #e2e8f0; color: #334155; padding: 3px 9px; border-radius: 12px; font-weight: 800; font-size: 12px;">2º</span>`;
-    if (index === 2) rankBadge = `<span style="background: #ffedd5; color: #9a3412; padding: 3px 9px; border-radius: 12px; font-weight: 800; font-size: 12px;">3º</span>`;
-
-    // Render marcas Badges
-    const marcasBadges = item.Marcas.map(m => {
-      const bgColor = brandColors[m.Marca] || '#64748b';
-      return `<span style="background-color: ${bgColor}12; color: ${bgColor}; border: 1px solid ${bgColor}35; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap;">
-        ${m.Marca} (${m.Registros})
-      </span>`;
-    }).join(' ');
-
-    tr.innerHTML = `
-      <td style="padding: 12px 16px; text-align: center;">${rankBadge}</td>
-      <td style="padding: 12px 16px; font-weight: 700; color: #0f172a;">${item.Asesor}</td>
-      <td style="padding: 12px 16px;"><div style="display: flex; gap: 6px; flex-wrap: wrap;">${marcasBadges}</div></td>
-      <td style="padding: 12px 16px; text-align: right; font-weight: 800; color: #2563eb;">${item.Registros}</td>
-      <td style="padding: 12px 16px; text-align: right; font-weight: 800; color: #059669;">${formatCurrency(item.Importe)}</td>
-      <td style="padding: 12px 16px; text-align: right; color: #475569; font-weight: 600;">${formatCurrency(ticketMedio)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function renderDashboard() {
-  const { data, metric } = getProcessedData();
-  updateKPIs(data);
-  renderPodium(data, metric);
-  renderChart(data, metric);
-  renderTable(data, metric);
-}
-
-// Inicializar al cargar
-document.addEventListener('DOMContentLoaded', () => {
-  renderDashboard();
+// --- datos planos
+var rows=[];
+D.campanas.forEach(function(c,ci){c.color=COL[ci%COL.length];c.agentes.forEach(function(a){
+  var r=Object.assign({campana:c.nombre,color:c.color},a);
+  r.conv=a.cupones>0&&a.ventas!=null?a.ventas/a.cupones:null;
+  r.conv_beca=a.total_beca>0&&a.ventas_beca!=null?a.ventas_beca/a.total_beca:null;
+  rows.push(r);});});
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\(m\)/g,'').split(/\s+/).filter(function(w){return w&&w!=='de'&&w!=='del'}).join(' ')}
+var SUMK=['cupones','ventas','eur','becas','rebecas','total_beca','ventas_beca'];
+var agents=[],byKey={};
+rows.forEach(function(r){var k=norm(r.nombre);r.key=k;var a=byKey[k];if(!a){a=byKey[k]={key:k,campanas:[]};agents.push(a)}a.campanas.push(r);});
+agents.forEach(function(a){
+  a.campanas.sort(function(x,y){return (y.cupones||0)-(x.cupones||0)||(y.eur||0)-(x.eur||0)});
+  var p=a.campanas[0];a.nombre=p.nombre;a.campana=p.campana;a.color=p.color;a.multi=a.campanas.length>1;
+  SUMK.forEach(function(k){var vals=a.campanas.map(function(r){return r[k]}).filter(function(v){return v!=null});a[k]=vals.length?vals.reduce(function(s,v){return s+v},0):null;});
+  a.conv=a.cupones>0&&a.ventas!=null?a.ventas/a.cupones:null;
+  a.conv_beca=a.total_beca>0&&a.ventas_beca!=null?a.ventas_beca/a.total_beca:null;
 });
+rows.forEach(function(r){r.agent=byKey[r.key];});
+var res=D.resumen.filter(function(r){return r.campana!=='TOTAL'});
+var tot=D.resumen.filter(function(r){return r.campana==='TOTAL'})[0];
+function campOf(name){return D.campanas.filter(function(c){return c.nombre.toLowerCase()===name.trim().toLowerCase()})[0]}
+
+// --- hero
+var gp=tot.facturacion/tot.objetivo;
+var allC=rows.reduce(function(s,r){return s+(r.cupones||0)},0),allV=rows.reduce(function(s,r){return s+(r.ventas||0)},0);
+var cumplen=res.filter(function(r){return r.objetivo>0&&r.facturacion>=r.objetivo}).length;
+$('cd-sub').textContent='Se ha facturado el '+fP(gp)+' del objetivo oficial. '+cumplen+' de '+res.filter(function(r){return r.objetivo>0}).length+' campañas con objetivo lo han superado.';
+// escala: 130 % del objetivo = ancho total
+$('cd-fill').style.width=Math.min(gp/1.3,1)*100+'%';$('cd-fill').style.background=stat(gp);
+var k=[[fE.format(tot.facturacion),'Facturación'],[fE.format(tot.objetivo),'Objetivo oficial'],[fE.format(tot.objetivo-tot.facturacion),'Pendiente para el 100 %'],[fN.format(allC),'Cupones normales'],[fN.format(allV),'Ventas con cupón normal'],[fP(allV/allC,2),'Conversión media']];
+$('cd-kpis').innerHTML=k.map(function(x){return '<div class="kpi"><b class="num">'+x[0]+'</b><span>'+x[1]+'</span></div>'}).join('');
+
+// --- estado
+var S={mode:'normal',camp:'',q:'',sort:'eur',dir:-1,open:{}};
+
+// --- campañas
+function drawCamps(){
+  var max=1.3;
+  $('cd-camps').innerHTML=res.map(function(r){
+    var p=r.objetivo>0?r.facturacion/r.objetivo:null;var c=campOf(r.campana);var key=c?c.nombre:'';
+    var w=p==null?0:Math.min(p/max,1)*100;
+    return '<button type="button" class="camp'+(S.camp===key?' on':'')+'" data-c="'+key+'" aria-pressed="'+(S.camp===key)+'">'+
+      '<span class="nm">'+r.campana.trim()+'</span>'+
+      '<span class="bar">'+(p==null?'':'<i style="width:'+w+'%;background:'+stat(p)+'"></i>')+'<span class="t" style="left:'+(100/max)+'%"></span></span>'+
+      '<span class="pc num" style="color:'+stat(p)+'">'+(p==null?'Sin obj.':fP(p,0))+'</span>'+
+      '<span class="eu num">'+fE.format(r.facturacion)+' / '+(r.objetivo>0?fE.format(r.objetivo):'—')+'</span></button>';
+  }).join('');
+}
+$('cd-camps').addEventListener('click',function(e){var b=e.target.closest('.camp');if(!b)return;S.camp=S.camp===b.dataset.c?'':b.dataset.c;$('cd-camp').value=S.camp;render();});
+
+// --- selector campaña
+$('cd-camp').innerHTML='<option value="">Todas las campañas</option>'+D.campanas.map(function(c){return '<option value="'+c.nombre+'">'+c.nombre+'</option>'}).join('');
+$('cd-camp').addEventListener('change',function(){S.camp=this.value;render();});
+$('cd-q').addEventListener('input',function(){S.q=this.value.toLowerCase();render();});
+root.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){
+  S.mode=b.dataset.mode;root.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+  S.sort=S.mode==='normal'?'eur':'total_beca';S.dir=-1;render();});});
+
+function filtered(){
+  return (S.camp?rows:agents).filter(function(r){
+    if(S.camp&&r.campana!==S.camp)return false;
+    if(S.q&&r.nombre.toLowerCase().indexOf(S.q)<0)return false;
+    if(S.mode==='beca'&&r.total_beca==null)return false;
+    return true;});
+}
+
+// --- tabla
+var COLS={normal:[['nombre','Agente'],['campana','Campañas'],['cupones','Cupones'],['ventas','Ventas'],['conv','Conversión'],['eur','Facturación']],
+ beca:[['nombre','Agente'],['campana','Campañas'],['becas','Becas'],['rebecas','Rebecas'],['total_beca','Total cupón'],['ventas_beca','Ventas'],['conv_beca','Conversión']]};
+function drawTable(list){
+  var cols=COLS[S.mode];
+  $('cd-thead').innerHTML='<tr>'+cols.map(function(c){return '<th tabindex="0" data-k="'+c[0]+'"'+(S.sort===c[0]?' aria-sort="'+(S.dir>0?'ascending':'descending')+'"':'')+'>'+c[1]+'</th>'}).join('')+'</tr>';
+  var avg=S.mode==='normal'?allV/allC:null;
+  var maxConv=Math.max.apply(null,list.map(function(r){var v=S.mode==='normal'?r.conv:r.conv_beca;return v!=null&&v<=1?v:0}).concat([0.0001]));
+  function chip(r,main){return '<span class="chip'+(main?' main':'')+'"><i style="background:'+r.color+'"></i>'+r.campana+'</span>'}
+  function cells(r,isDet){return cols.map(function(c){
+      var k=c[0],v=r[k];
+      if(k==='nombre'){
+        if(isDet)return '<td>'+chip(r,false)+'</td>';
+        var unified=!S.camp;var open=unified&&r.multi&&S.open[r.key];
+        return '<td>'+(unified?'<span class="exp" aria-hidden="true">'+(r.multi?'▶':'')+'</span>':'')+v+
+          (unified&&r.multi?'<span class="badge">'+r.campanas.length+' campañas</span>':'')+
+          (!unified&&r.agent.multi&&r.agent.campanas[0]!==r?'<span class="tag">apoyo</span>':'')+'</td>';}
+      if(k==='campana'){
+        if(isDet)return '<td>'+(r===r.agent.campanas[0]?'Principal':'Apoyo')+'</td>';
+        var a=S.camp?r.agent:r;
+        return '<td>'+a.campanas.map(function(x,i){return chip(x,a.multi&&i===0)}).join('')+'</td>';}
+      if(k==='eur')return '<td class="num">'+(v==null?'<span class="na">—</span>':fE.format(v))+'</td>';
+      if(k==='conv'||k==='conv_beca'){
+        if(v==null)return '<td class="na">—</td>';
+        var col=avg==null?'#1E5AA8':(v>=avg?C.good:v>=avg*.7?C.warn:C.bad);
+        return '<td class="num"><span class="cv" style="color:'+col+'"><span style="color:'+C.ink+'">'+fP(v)+'</span><i><u style="width:'+Math.min(v/maxConv,1)*100+'%"></u></i></span></td>';}
+      return '<td class="num">'+n(v)+'</td>';}).join('');}
+  $('cd-tbody').innerHTML=list.length?list.map(function(r){
+    var unified=!S.camp,open=unified&&r.multi&&S.open[r.key];
+    var h='<tr class="'+(unified&&r.multi?'multi':'')+(open?' open':'')+'" data-key="'+r.key+'"'+(unified&&r.multi?' tabindex="0" aria-expanded="'+!!open+'"':'')+'>'+cells(r,false)+'</tr>';
+    if(open)r.campanas.forEach(function(x){if(S.mode==='beca'&&x.total_beca==null)return;h+='<tr class="det">'+cells(x,true)+'</tr>'});
+    return h;}).join('')
+   :'<tr><td colspan="'+cols.length+'" style="text-align:left;color:'+C.muted+'">No hay agentes que coincidan con estos filtros. Cambia la campaña o borra la búsqueda.</td></tr>';
+}
+function toggle(e){var tr=e.target.closest('tr.multi');if(!tr)return;var k=tr.dataset.key;S.open[k]=!S.open[k];render();
+  var again=$('cd-tbody').querySelector('tr[data-key="'+k+'"]');if(again&&e.type==='keydown')again.focus();}
+$('cd-tbody').addEventListener('click',toggle);
+$('cd-tbody').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle(e)}});
+$('cd-thead').addEventListener('click',sortBy);$('cd-thead').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();sortBy(e)}});
+function sortBy(e){var th=e.target.closest('th');if(!th)return;var k=th.dataset.k;if(S.sort===k)S.dir*=-1;else{S.sort=k;S.dir=(k==='nombre'||k==='campana')?1:-1}render();}
+
+// --- dispersión
+var NS='http://www.w3.org/2000/svg';
+function drawScatter(list){
+  var W=520,H=320,m={l:48,r:14,t:12,b:40};
+  var xk=S.mode==='normal'?'cupones':'total_beca',yk=S.mode==='normal'?'ventas':'ventas_beca';
+  var pts=list.filter(function(r){return r[xk]!=null&&r[yk]!=null});
+  $('cd-sc-title').textContent=S.mode==='normal'?'Cupones recibidos y ventas':'Cupones beca / rebeca y ventas';
+  function nice(v){var p=Math.pow(10,Math.floor(Math.log10(v))),f=v/p;return (f<=1?1:f<=2?2:f<=5?5:10)*p}
+  var xs=nice(Math.max.apply(null,pts.map(function(r){return r[xk]}).concat([10]))/4),ys=Math.max(1,nice(Math.max.apply(null,pts.map(function(r){return r[yk]}).concat([3]))/4));
+  var xm=Math.ceil(Math.max.apply(null,pts.map(function(r){return r[xk]}).concat([10]))/xs)*xs,ym=Math.ceil(Math.max.apply(null,pts.map(function(r){return r[yk]}).concat([3]))*1.05/ys)*ys;
+  var X=function(v){return m.l+v/xm*(W-m.l-m.r)},Y=function(v){return H-m.b-Math.max(v,0)/ym*(H-m.t-m.b)};
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Gráfico de dispersión de cupones frente a ventas">';
+  for(var yv=0;yv<=ym+1e-9;yv+=ys){
+    s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+Y(yv)+'" y2="'+Y(yv)+'" stroke="'+C.line+'"/>';
+    s+='<text x="'+(m.l-6)+'" y="'+(Y(yv)+4)+'" font-size="11" text-anchor="end" fill="'+C.muted+'">'+fN.format(yv)+'</text>';}
+  for(var xv=0;xv<=xm+1e-9;xv+=xs){
+    s+='<text x="'+X(xv)+'" y="'+(H-m.b+16)+'" font-size="11" text-anchor="middle" fill="'+C.muted+'">'+fN.format(xv)+'</text>';}
+  s+='<text x="'+((W+m.l)/2)+'" y="'+(H-6)+'" font-size="12" text-anchor="middle" fill="'+C.muted+'">Cupones</text>';
+  s+='<text transform="translate(12 '+((H-m.b)/2)+') rotate(-90)" font-size="12" text-anchor="middle" fill="'+C.muted+'">Ventas</text>';
+  if(S.mode==='normal'){var av=allV/allC,ex=Math.min(xm,ym/av);
+    s+='<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(ex)+'" y2="'+Y(ex*av)+'" stroke="'+C.ink+'" stroke-dasharray="4 4" stroke-width="1"/>';
+    s+='<text x="'+(X(ex)-4)+'" y="'+(Y(ex*av)+14)+'" font-size="11" text-anchor="end" fill="'+C.ink+'">Conversión media '+fP(av)+'</text>';}
+  pts.forEach(function(r,i){s+='<circle data-i="'+i+'" cx="'+X(r[xk])+'" cy="'+Y(r[yk])+'" r="6" fill="'+r.color+'" fill-opacity="'+(r.apoyo?.35:.8)+'" stroke="#fff" stroke-width="1.5" style="cursor:pointer"/>';});
+  s+='</svg>';
+  var box=$('cd-scatter');box.innerHTML=s;var tip=$('cd-tip');
+  box.querySelectorAll('circle').forEach(function(c){
+    c.addEventListener('mouseenter',function(){var r=pts[+c.dataset.i];
+      tip.innerHTML='<b>'+r.nombre+'</b><br>'+(r.campanas&&r.multi?r.campanas.map(function(x){return x.campana}).join(' + '):r.campana)+' · '+fN.format(r[xk])+' cupones · '+fN.format(r[yk])+' ventas'+(S.mode==='normal'&&r.conv!=null?' · '+fP(r.conv):'');
+      var bb=box.parentNode.getBoundingClientRect(),cb=c.getBoundingClientRect();
+      var left=cb.left-bb.left+10;tip.style.top=(cb.top-bb.top-40)+'px';tip.style.opacity=1;
+      tip.style.left=Math.min(left,bb.width-tip.offsetWidth-6)+'px';});
+    c.addEventListener('mouseleave',function(){tip.style.opacity=0});});
+}
+
+// --- ranking
+function drawRank(list){
+  var k=S.mode==='normal'?'eur':'ventas_beca';
+  $('cd-rk-title').textContent=S.mode==='normal'?'Top 10 por facturación':'Top 10 por ventas con cupón beca';
+  var top=list.filter(function(r){return r[k]!=null&&r[k]>0}).sort(function(a,b){return b[k]-a[k]}).slice(0,10);
+  if(!top.length){$('cd-rank').innerHTML='<p style="color:'+C.muted+';font-size:14px;padding:20px 0">Sin datos para estos filtros.</p>';return}
+  var W=520,rh=29,H=top.length*rh+8,lw=190,mx=top[0][k];
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Ranking de agentes">';
+  top.forEach(function(r,i){var y=i*rh+4,w=(W-lw-90)*r[k]/mx;var nm=r.nombre.length>26?r.nombre.slice(0,25)+'…':r.nombre;
+    s+='<text x="'+(lw-8)+'" y="'+(y+15)+'" font-size="12" text-anchor="end" fill="'+C.ink+'"><title>'+r.nombre+'</title>'+nm+'</text>';
+    s+='<rect x="'+lw+'" y="'+(y+4)+'" width="'+Math.max(w,2)+'" height="16" rx="2" fill="'+r.color+'" fill-opacity="'+(r.apoyo?.4:.85)+'"/>';
+    s+='<text x="'+(lw+w+6)+'" y="'+(y+16)+'" font-size="12" fill="'+C.muted+'">'+(k==='eur'?fE.format(r[k]):fN.format(r[k]))+'</text>';});
+  $('cd-rank').innerHTML=s+'</svg>';
+}
+
+function render(){
+  drawCamps();
+  var list=filtered();var k=S.sort;
+  list.sort(function(a,b){var x=a[k],y=b[k];if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (typeof x==='string'?x.localeCompare(y,'es'):x-y)*S.dir});
+  var cu=0,ve=0,eu=0,cb=0,vb=0;list.forEach(function(r){cu+=r.cupones||0;ve+=r.ventas||0;eu+=r.eur||0;cb+=r.total_beca||0;vb+=r.ventas_beca||0});
+  var nm=S.camp?'':' ('+list.filter(function(r){return r.multi}).length+' en varias campañas)';
+  $('cd-sum').innerHTML=S.mode==='normal'
+   ?'<b>'+list.length+'</b> comerciales'+nm+' · <b>'+fN.format(cu)+'</b> cupones · <b>'+fN.format(ve)+'</b> ventas · conversión <b>'+fP(cu?ve/cu:null,2)+'</b> · <b>'+fE.format(eu)+'</b>'
+   :'<b>'+list.length+'</b> comerciales'+nm+' · <b>'+fN.format(cb)+'</b> cupones beca/rebeca · <b>'+fN.format(vb)+'</b> ventas · conversión <b>'+fP(cb?vb/cb:null,2)+'</b>'+(S.camp==='UNISPORT'?' · Unisport no tiene cupón beca':'');
+  drawTable(list);drawScatter(list);drawRank(list);
+}
+render();
+})();
 </script>
+</div>
